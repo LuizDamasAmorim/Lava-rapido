@@ -1,0 +1,23 @@
+{
+  "name": "lava-rapido",
+  "version": "1.0.0",
+  "description": "Desenvolvimento de um sistema desktop para gestão de ordem de serviços de um lava rapido de bairro.",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LuizDamasAmorim/Lava-rapido.git"
+  },
+  "author": "Luiz Damas Amorim",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/LuizDamasAmorim/Lava-rapido/issues"
+  },
+  "homepage": "https://github.com/LuizDamasAmorim/Lava-rapido#readme",
+  "devDependencies": {
+    "electron": "^34.2.0"
+  }
+}

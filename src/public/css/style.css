@@ -1,0 +1,33 @@
+@charset "UTF-8";
+
+*{
+    margin: 0;
+    padding: 0;
+}
+
+/* Botões da tela principal */
+.button img {
+    margin: 50px 15px 25px 15px;
+    width: 128px;
+    height: 128px;
+    padding: 5px;
+    border: 1px solid #e8e8e8;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.button {
+    text-align: center;
+}
+
+
+/* Rodapé */
+footer {
+    width: 100%;
+    background-color: black;
+    color: white;
+    text-align: center;
+    font-weight: 600;
+    position: fixed;
+    bottom: 0;
+}
