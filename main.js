@@ -1,6 +1,9 @@
 console.log("Processo principal")
 
-const { app, BrowserWindow, nativeTheme, Menu } = require('electron')
+const { app, BrowserWindow, nativeTheme, Menu, ipcMain } = require('electron')
+
+// Esta linha está relacionada ao preload.js
+const path = require("node:path")
 
 // Janela principal 
 let win
@@ -12,13 +15,35 @@ const createWindow = () => {
         height: 600,
         //autoHideMenuBar: true,    //Minimizar a tela
         //minimizable: false,      //Não deixar diminuir a tela manualmente
-        resizable: false
+        resizable: false,
+
+         //Ativação do preload .js
+         webPreferences: {
+            preload: path.join(__dirname, 'preload.js')
+        }
     })
 
     //Menu personalizado
     Menu.setApplicationMenu(Menu.buildFromTemplate(template))
 
     win.loadFile('./src/views/index.html')
+
+    // Recebimento dos pedidos remotos do renderizador para a abertura de janelas (botões) autorizado no preload.js 
+    ipcMain.on ('cadclientes-window', () => {
+        cadclientesWindow()
+    })
+
+    ipcMain.on ('servicos-window', () => {
+        servicosWindow()
+    })
+
+    ipcMain.on ('cadcarros-window', () => {
+        cadcarrosWindow()
+    })
+
+    ipcMain.on ('funcionarios-window', () => {
+        funcionariosWindow()
+    })
 }
 
 //Janela sobre
@@ -47,10 +72,79 @@ function aboutWindow(){
     about.loadFile('./src/views/sobre.html')
 }
 
+//Janela cadclientes
+let cadclientes
+function cadclientesWindow() {
+    nativeTheme.themeSource = 'light'
+    const main = BrowserWindow.getFocusedWindow()
+    if(main) {
+        cadclientes = new BrowserWindow({
+            width: 1010,
+            height: 720,
+            //autoHideMenuBar: true,
+            parent: main,
+            modal: true
+        })
+    }
+    cadclientes.loadFile('./src/views/cadclientes.html')
+    cadclientes.center() // centralizar cadclientes
+}
+
+//Janela cadcarros
+let cadcarros
+function cadcarrosWindow() {
+    nativeTheme.themeSource = 'light'
+    const main = BrowserWindow.getFocusedWindow()
+    if(main) {
+        cadcarros = new BrowserWindow({
+            width: 1010,
+            height: 720,
+            //autoHideMenuBar: true,
+            parent: main,
+            modal: true
+        })
+    }
+    cadcarros.loadFile('./src/views/cadcarros.html')
+    cadcarros.center() // centralizar cadcarros
+}
+
+//Janela serviços
+let servicos
+function servicosWindow() {
+    nativeTheme.themeSource = 'light'
+    const main = BrowserWindow.getFocusedWindow()
+    if(main) {
+        servicos = new BrowserWindow({
+            width: 1010,
+            height: 720,
+            //autoHideMenuBar: true,
+            parent: main,
+            modal: true
+        })
+    }
+    servicos.loadFile('./src/views/servicos.html')
+    servicos.center() // centralizar servicos
+}
+
+//Janela funcionarios
+let funcionarios
+function funcionariosWindow() {
+    nativeTheme.themeSource = 'light'
+    const main = BrowserWindow.getFocusedWindow()
+    if(main) {
+        funcionarios = new BrowserWindow({
+            width: 1010,
+            height: 720,
+            //autoHideMenuBar: true,
+            parent: main,
+            modal: true
+        })
+    }
+    funcionarios.loadFile('./src/views/funcionarios.html')
+    funcionarios.center() // centralizar funcionarios
+}
+
 // Iniciar a aplicação  
-app.whenReady().then(() => {
-    createWindow()
-})
 
 app.whenReady().then(() => {
     createWindow()
@@ -77,19 +171,23 @@ const template = [
         label: 'Cadastro',
         submenu: [
             {
-                label: 'Clientes'
+                label: 'Clientes',
+                click: () => cadclientesWindow() 
             },
             {
-                label: 'Serviços'
+                label: 'Serviços',
+                click: () => servicosWindow() 
             },
             {
-                label: 'Funcionários'
+                label: 'Funcionários',
+                click: () => funcionariosWindow() 
             },
             {
                 type: 'separator'
             },
             {
-                label: 'Cadastro de veículos'
+                label: 'Cadastro de veículos',
+                click: () => vadcarrosiosWindow() 
             },
             {
                 type: 'separator'
