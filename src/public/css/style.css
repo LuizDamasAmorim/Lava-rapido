@@ -20,6 +20,21 @@
     text-align: center;
 }
 
+/* Ajustar o height da busca de clientes na OS */
+
+#buscarclientes {
+    height: 40px;
+}
+
+/* Botão reset */
+#btnReset {
+    width: 64px;
+    height: 64px;
+    background-image: url('../img/apagadorazul.png');
+    border: none;
+    cursor: pointer;
+    margin-left: 10px;
+}
 
 /* Rodapé */
 footer {

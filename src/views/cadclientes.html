@@ -1,24 +1,80 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pr-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro de Clientes</title>
+    <title>Cadastro de clientes</title>
     <!-- Bootstrap -->
     <link rel="stylesheet" href="../public/css/bootstrap.min.css">
 
     <!-- CSS personalizado -->
-     <link rel="stylesheet" href="../public/css/style.css">
+    <link rel="stylesheet" href="../public/css/style.css">
 
-     <!-- Impedir a execução de scripts externos ou não autorizados -->
-      <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' ">
+    <!-- Impedir a execução de scripts externos ou não autorizados -->
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' ">
 </head>
+
 <body>
+
     <div class="container">
-        <h1>Cadastro de clientes</h1>
+        <h1 class="d-flex justify-content-center mb-4">Cadastro de clientes</h1>
+        <form id="frmClient" class="mt-2 row g-3">
+            <!-- Buscar cliente -->
+            <div class="col-md-6">
+                <input type="text" class="form-control" id="searchClient" maxlength="30" spellcheck="false">
+            </div>
+            <div class="col-md-4">
+                <button type="button" class="btn btn-primary" id="btnRead" onclick="searchClient()">Buscar</button>
+            </div>
+
+            <!-- Linha -->
+            <hr class="mt-4 border border-dark border -1">
+
+            <!-- Nome -->
+            <div class="col-md-8">
+                <label for="inputNameClient" class="form-label">Nome</label>
+                <input type="text" class="form-control" id="inputNameClient" spellcheck="false" required maxlength="30">
+            </div>
+
+            <!-- CPF  -->
+            <div class="col-md-4">
+                <label for="inputCPFClient" class="form-label">CPF</label>
+                <input type="text" class="form-control" id="inputCPFClient" spellcheck="false" maxlength="15">
+            </div>
+
+            <!-- E-mail  -->
+            <div class="col-md-6">
+                <label for="inputEmaillient" class="form-label">E-mail</label>
+                <input type="email" class="form-control" id="inputEmaillient" spellcheck="false" maxlength="30">
+            </div>
+
+            <!-- Telefone  -->
+            <div class="col-md-4">
+                <label for="inputPhoneClient" class="form-label">Telefone</label>
+                <input type="text" class="form-control" id="inputPhoneClient" spellcheck="false" required maxlength="15">
+            </div>
+
+
+            <!-- Botões -->
+            <div class="mt-5">
+                <button type="submit" class="btn btn-primary" id="btnCreate">Adicionar</button>
+                <button type="submit" class="btn border-primary text-primary" id="btnUpdate">Editar</button>
+                <button type="button" class="btn btn-danger" id="btnDelete">Excluir</button>
+                <button type="reset" class="btn" id="btnReset" onclick="resetForm()"></button>
+             </div>
+
+        </form>
     </div>
+
+
+
 
     <!-- Bootstrap -->
     <script src="../public/js/bootstrap.min.js"></script>
+
+    <!-- Javascript personalizado -->
+    <script src="../public/js/srcipt.js"></script>
 </body>
+
 </html>
