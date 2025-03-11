@@ -1,9 +1,9 @@
 1. Cadastro de Clientes
-Nome completo \ CPF/CNPJ \ Telefone e e-mail 
+Nome completo \ CPF \ Telefone \ e-mail 
 
 2. Emissão da Ordem de Serviço (OS)
 - Número da OS (gerado automaticamente)
-- Data e hora da abertura (gerado automaticamente)
+- Data da abertura (gerado automaticamente)
 - Dados do cliente (puxar do cadastro de clientes)
 - Prazo estimado para conclusão
 - Status da OS (Aberta, Em andamento, Finalizada, Cancelada)
@@ -14,8 +14,9 @@ Modelo \ Ano \ Cor \ Tipo \ Placa
 
 4. Funcionários:
 - Nome completo
-- CPF/CNPJ  
-- Telefone e e-mail
+- CPF  
+- Telefone
+- E-mail
 - Cargos
 - Horário de expediente
 - Salario
