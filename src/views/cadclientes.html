@@ -55,6 +55,77 @@
                 <input type="text" class="form-control" id="inputPhoneClient" spellcheck="false" required maxlength="15">
             </div>
 
+            <!-- CEP  -->
+            <div class="col-md-2">
+                <label for="inputCEPClient" class="form-label">CEP</label>
+                <input type="text" class="form-control" id="inputCEPClient" spellcheck="false" maxlength="9" onblur="buscarCEP()">
+            </div>
+
+            <!-- Logradouro  -->
+            <div class="col-md-6">
+                <label for="inputAddressClient" class="form-label">Logradouro</label>
+                <input type="text" class="form-control" id="inputAddressClient" spellcheck="false" maxlength="30">
+            </div>
+
+            <!-- Número  -->
+            <div class="col-md-3">
+                <label for="inputNumberClient" class="form-label">Número</label>
+                <input type="text" class="form-control" id="inputNumberClient" spellcheck="false" maxlength="5">
+            </div>
+
+            <!-- Complemento  -->
+            <div class="col-md-3">
+                <label for="inputComplementClient" class="form-label">Complemento</label>
+                <input type="text" class="form-control" id="inputComplementClient" spellcheck="false" maxlength="12">
+            </div>
+
+            <!-- Bairro  -->
+            <div class="col-md-5">
+                <label for="inputneighborhoodClient" class="form-label">Bairro</label>
+                <input type="text" class="form-control" id="inputneighborhoodClient" spellcheck="false" maxlength="30">
+            </div>
+
+            <!-- Cidade  -->
+            <div class="col-md-4">
+                <label for="inputCityClient" class="form-label">Cidade</label>
+                <input type="text" class="form-control" id="inputCityClient" spellcheck="false" maxlength="30">
+            </div>
+
+            <!-- UF  -->
+            <div class="col-md-3">
+                <label for="inputUFClient" class="form-label">UF</label>
+            <select class="form-select" id="inputUFClient" name="UF">
+                <option value="">Selecione uma UF</option>
+                <option value="AC">AC - Acre</option>
+                <option value="AL">AL - Alagoas</option>
+                <option value="AP">AP - Amapá</option>
+                <option value="AM">AM - Amazonas</option>
+                <option value="BA">BA - Bahia</option>
+                <option value="CE">CE - Ceará</option>
+                <option value="DF">DF - Distrito Federal</option>
+                <option value="ES">ES - Espírito Santo</option>
+                <option value="GO">GO - Goiás</option>
+                <option value="MA">MA - Maranhão</option>
+                <option value="MT">MT - Mato Grosso</option>
+                <option value="MS">MS - Mato Grosso do Sul</option>
+                <option value="MG">MG - Minas Gerais</option>
+                <option value="PA">PA - Pará</option>
+                <option value="PB">PB - Paraíba</option>
+                <option value="PR">PR - Paraná</option>
+                <option value="PE">PE - Pernambuco</option>
+                <option value="PI">PI - Piauí</option>
+                <option value="RJ">RJ - Rio de Janeiro</option>
+                <option value="RN">RN - Rio Grande do Norte</option>
+                <option value="RS">RS - Rio Grande do Sul</option>
+                <option value="RO">RO - Rondônia</option>
+                <option value="RR">RR - Roraima</option>
+                <option value="SC">SC - Santa Catarina</option>
+                <option value="SP">SP - São Paulo</option>
+                <option value="SE">SE - Sergipe</option>
+                <option value="TO">TO - Tocantins</option>
+            </select>
+            </div>
+
 
             <!-- Botões -->
             <div class="mt-5">
@@ -75,6 +146,9 @@
 
     <!-- Javascript personalizado -->
     <script src="../public/js/srcipt.js"></script>
+
+    <!-- Renderizador -->
+    <script src="rendererClientes.js"></script>
 </body>
 
 </html>
