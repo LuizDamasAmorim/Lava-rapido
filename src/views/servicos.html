@@ -62,11 +62,21 @@
                 <input type="text" class="form-control" id="inputPrazoOS" spellcheck="false" required maxlength="15">
             </div>
 
+            <!-- Funcionário -->
+            <div>
+                <label for="inputFuncionarioOS" class="form-label">Funcionário responsável</label>
+                <input type="text" class="form-control" id="inputFuncionarioOS" spellcheck="false" maxlength="50">
+            </div>
+
             <!-- Status da OS  -->
             <div>
                 <label for="inputStatusOS" class="form-label">Status da OS</label>
-                <input type="text" class="form-control" id="inputStatusOS" spellcheck="false" required maxlength="30">
-            </div>
+            <select class="form-select" id="inputStatusOS" name="Status da OS" required>
+                <option value=""></option>
+                <option value="AC">Pendente</option>
+                <option value="AL">Em andamento</option>
+                <option value="AP">Concluida</option>
+                <option value="AM">Cancelada</option>
 
 
             <!-- Botões -->
