@@ -34,7 +34,7 @@
             </div>
 
             <!-- Buscar cliente -->
-            <div class="col-md-6" id="buscarclientes">
+            <div class="col-md-7" id="buscarclientes">
                 <label for="inputnumeroOS" class="form-label">
                     Buscar Clientes
                 </label>
@@ -42,7 +42,25 @@
                     <input type="text" class="form-control" id="searchClient" maxlength="30" spellcheck="false">
                     <button type="button" class="btn btn-primary" id="btnRead" onclick="searchClient()">Buscar</button>
                 </div>
+            </div>
 
+            <!-- Nome -->
+            <div class="col-md-4">
+                <label for="inputNameClient" class="form-label">Nome</label>
+                <input type="text" class="form-control" id="inputNameClient" spellcheck="false" required disabled maxlength="30">
+            </div>
+
+            <!-- CPF  -->
+            <div class="col-md-4">
+                <label for="inputCPFClient" class="form-label">CPF</label>
+                <input type="text" class="form-control" id="inputCPFClient" spellcheck="false" disabled maxlength="15">
+            </div>
+
+
+            <!-- Telefone  -->
+            <div class="col-md-4">
+                <label for="inputPhoneClient" class="form-label">Telefone</label>
+                <input type="text" class="form-control" id="inputPhoneClient" spellcheck="false" required disabled maxlength="15">
             </div>
 
             <!-- Linha -->
