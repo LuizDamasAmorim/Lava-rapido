@@ -43,7 +43,15 @@ footer {
     background-color: black;
     color: white;
     text-align: center;
-    font-weight: 600;
     position: fixed;
     bottom: 0;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    align-items: center;
+}
+footer p{
+    font-size: 14px;
+    margin-top: 15px;
+    text-transform: uppercase;
 }
