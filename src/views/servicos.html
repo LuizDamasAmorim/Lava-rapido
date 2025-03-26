@@ -4,37 +4,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Serviços</title>
+    <title>Ordem de Serviço</title>
     <!-- Bootstrap -->
     <link rel="stylesheet" href="../public/css/bootstrap.min.css">
-
     <!-- CSS personalizado -->
     <link rel="stylesheet" href="../public/css/style.css">
-
-    <!-- Impedir a execução de scripts externos ou não autorizados -->
-    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' ">
+    <!-- impedir a execução de scripts externos ou não autorizados -->
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline'">
 </head>
 
 <body>
     <div class="container">
-        <h1 class="d-flex justify-content-center mb-4">OS</h1>
-        <form id="frmClient" class="mt-2 row g-3">
+        <form id="frmOS" class="mt-2 row g-3">
 
-            <!-- Número da OS -->
-            <div class="col-md-2">
-                <label for="inputnumeroOS" class="form-label">Número da OS</label>
-                <input type="number" class="form-control" id="inputnumeroOS" spellcheck="false" disabled
-                    maxlength="30">
+            <h1 class="d-flex justify-content-center mb-4">OS</h1>
+
+            <!-- OS -->
+            <div class="col-md-4">
+                <label class="form-label">Nº OS</label>
+                <input type="text" class="form-control" id="txtOs" disabled>
             </div>
 
-            <!-- Data da abertura  -->
-            <div class="col-md-2">
-                <label for="inputDateOS" class="form-label">Data da Abertura</label>
-                <input type="date" class="form-control" id="inputDateOS" spellcheck="false" disabled maxlength="8">
+            <!-- Data -->
+            <div class="col-md-3">
+                <label class="form-label">Data</label>
+                <input type="text" class="form-control" id="txtData" disabled>
             </div>
 
             <!-- Buscar cliente -->
-            <div class="col-md-7" id="buscarclientes">
+            <div class="col-md-4" id="buscarclientes">
                 <label for="inputnumeroOS" class="form-label">
                     Buscar Clientes
                 </label>
@@ -45,58 +43,70 @@
             </div>
 
             <!-- Nome -->
-            <div class="col-md-4">
+            <div class="col-md-5">
                 <label for="inputNameClient" class="form-label">Nome</label>
-                <input type="text" class="form-control" id="inputNameClient" spellcheck="false" required disabled maxlength="30">
+                <input type="text" class="form-control" id="inputNameClient" spellcheck="false" maxlength="30" disabled>
             </div>
 
-            <!-- CPF  -->
+            <!-- Telefone -->
+            <div class="col-md-3">
+                <label for="inputPhoneClient" class="form-label">Telefone</label>
+                <input type="text" class="form-control" id="inputPhoneClient" spellcheck="false" maxlength="15"
+                    disabled>
+            </div>
+
+            <!-- CPF -->
             <div class="col-md-4">
                 <label for="inputCPFClient" class="form-label">CPF</label>
-                <input type="text" class="form-control" id="inputCPFClient" spellcheck="false" disabled maxlength="15">
-            </div>
-
-
-            <!-- Telefone  -->
-            <div class="col-md-4">
-                <label for="inputPhoneClient" class="form-label">Telefone</label>
-                <input type="text" class="form-control" id="inputPhoneClient" spellcheck="false" required disabled maxlength="15">
+                <input type="text" class="form-control" id="inputCPFClient" spellcheck="false" maxlength="15" disabled>
             </div>
 
             <!-- Linha -->
-            <hr class="mt-4 border border-dark border -1">
+            <hr class="mt-4 border border-secondary border -1">
+
+            <!-- Placa do veículo  -->
+            <div class="col-md-6">
+                <label for="inputPlacaOS" class="form-label">Placa do Veículo</label>
+                <input type="text" class="form-control" id="inputPlacaOS" spellcheck="false" required maxlength="15">
+            </div>
 
             <!-- Prazo  -->
-            <div>
+            <div class="col-md-6">
                 <label for="inputPrazoOS" class="form-label">Prazo</label>
                 <input type="text" class="form-control" id="inputPrazoOS" spellcheck="false" required maxlength="15">
             </div>
 
             <!-- Funcionário -->
-            <div>
+            <div class="col-md-6">
                 <label for="inputFuncionarioOS" class="form-label">Funcionário responsável</label>
                 <input type="text" class="form-control" id="inputFuncionarioOS" spellcheck="false" maxlength="50">
             </div>
 
-            <!-- Status da OS  -->
-            <div>
-                <label for="inputStatusOS" class="form-label">Status da OS</label>
-            <select class="form-select" id="inputStatusOS" name="Status da OS" required>
-                <option value=""></option>
-                <option value="AC">Pendente</option>
-                <option value="AL">Em andamento</option>
-                <option value="AP">Concluida</option>
-                <option value="AM">Cancelada</option>
 
-
-            <!-- Botões -->
-            <div class="mt-5">
-                <button type="submit" class="btn btn-primary" id="btnCreate">Adicionar</button>
-                <button type="submit" class="btn border-primary text-primary" id="btnUpdate">Editar</button>
-                <button type="button" class="btn btn-danger" id="btnDelete">Excluir</button>
-                <button type="reset" class="btn" id="btnReset" onclick="resetForm()"></button>
+            <!-- Status -->
+            <div class="col-md-6">
+                <label class="form-label">Status da OS</label>
+                <select class="form-select" id="inputOsStatus">
+                    <option value=""></option>
+                    <option>Aberta</option>
+                    <option>Em andamento</option>
+                    <option>Finalizada</option>
+                    <option>Cancelada</option>
+                </select>
             </div>
 
+            <!-- Valor  -->
+            <div class="col-md-3">
+                <label for="inputValorOS" class="form-label">Valor</label>
+                <input type="text" class="form-control" id="inputValorOS" spellcheck="false" required maxlength="15">
+            </div>
+        
+
+            <div class="mt-5">
+                <button type="button" class="btn btn-primary">Gerar OS</button>
+                <button type="button" class="btn border-primary text-primary">Editar OS</button>
+                <button type="button" class="btn btn-danger">Excluir OS</button>
+                <button type="button" class="btn btn-secondary">Imprimir OS</button>
         </form>
     </div>
 

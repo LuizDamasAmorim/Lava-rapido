@@ -6,7 +6,10 @@ const { app, BrowserWindow, nativeTheme, Menu, ipcMain } = require('electron')
 const path = require("node:path")
 
 // Importação dos metodos conectar e desconectar (do modulo de conexão)
-const {conectar,desconectar} = require("./database.js")
+const { conectar, desconectar } = require("./database.js")
+
+// Importação dos métodos conectar e desconectar (módulo de conexão)
+const clientModel = require('./src/models/Clientes.js')
 
 // Janela principal 
 let win
@@ -20,8 +23,8 @@ const createWindow = () => {
         //minimizable: false,      //Não deixar diminuir a tela manualmente
         resizable: false,
 
-         //Ativação do preload .js
-         webPreferences: {
+        //Ativação do preload .js
+        webPreferences: {
             preload: path.join(__dirname, 'preload.js')
         }
     })
@@ -32,25 +35,25 @@ const createWindow = () => {
     win.loadFile('./src/views/index.html')
 
     // Recebimento dos pedidos remotos do renderizador para a abertura de janelas (botões) autorizado no preload.js 
-    ipcMain.on ('cadclientes-window', () => {
+    ipcMain.on('cadclientes-window', () => {
         cadclientesWindow()
     })
 
-    ipcMain.on ('servicos-window', () => {
+    ipcMain.on('servicos-window', () => {
         servicosWindow()
     })
 
-    ipcMain.on ('cadcarros-window', () => {
+    ipcMain.on('cadcarros-window', () => {
         cadcarrosWindow()
     })
 
-    ipcMain.on ('funcionarios-window', () => {
+    ipcMain.on('funcionarios-window', () => {
         funcionariosWindow()
     })
 }
 
 //Janela sobre
-function aboutWindow(){
+function aboutWindow() {
     nativeTheme.themeSource = 'light'
 
     // A linha abauixo obtem a janela principal
@@ -80,13 +83,17 @@ let cadclientes
 function cadclientesWindow() {
     nativeTheme.themeSource = 'light'
     const main = BrowserWindow.getFocusedWindow()
-    if(main) {
+    if (main) {
         cadclientes = new BrowserWindow({
             width: 1010,
             height: 720,
             //autoHideMenuBar: true,
             parent: main,
-            modal: true
+            modal: true,
+            //Ativação do preload.js
+            webPreferences: {
+                preload: path.join(__dirname, 'preload.js')
+            }
         })
     }
     cadclientes.loadFile('./src/views/cadclientes.html')
@@ -98,7 +105,7 @@ let cadcarros
 function cadcarrosWindow() {
     nativeTheme.themeSource = 'light'
     const main = BrowserWindow.getFocusedWindow()
-    if(main) {
+    if (main) {
         cadcarros = new BrowserWindow({
             width: 1010,
             height: 720,
@@ -116,7 +123,7 @@ let servicos
 function servicosWindow() {
     nativeTheme.themeSource = 'light'
     const main = BrowserWindow.getFocusedWindow()
-    if(main) {
+    if (main) {
         servicos = new BrowserWindow({
             width: 1010,
             height: 720,
@@ -134,7 +141,7 @@ let funcionarios
 function funcionariosWindow() {
     nativeTheme.themeSource = 'light'
     const main = BrowserWindow.getFocusedWindow()
-    if(main) {
+    if (main) {
         funcionarios = new BrowserWindow({
             width: 1010,
             height: 720,
@@ -174,17 +181,17 @@ ipcMain.on('db-connect', async (event) => {
     let conectado = await conectar()
     // se conectado for igual a true
     if (conectado) {
-      // enviar uma mensagem para o renderizador trocar o ícone
-      setTimeout(() => {
-        event.reply('db-status', "conectado")
-      }, 500)
+        // enviar uma mensagem para o renderizador trocar o ícone
+        setTimeout(() => {
+            event.reply('db-status', "conectado")
+        }, 500)
     }
-  })
-  
-  // IMPORTANTE! Desconectar do banco de dados quando a aplicação for encerrada
-  app.on('before-quit', () => {
+})
+
+// IMPORTANTE! Desconectar do banco de dados quando a aplicação for encerrada
+app.on('before-quit', () => {
     desconectar()
-  })
+})
 
 
 // Template do menu
@@ -194,22 +201,22 @@ const template = [
         submenu: [
             {
                 label: 'Clientes',
-                click: () => cadclientesWindow() 
+                click: () => cadclientesWindow()
             },
             {
                 label: 'Serviços',
-                click: () => servicosWindow() 
+                click: () => servicosWindow()
             },
             {
                 label: 'Funcionários',
-                click: () => funcionariosWindow() 
+                click: () => funcionariosWindow()
             },
             {
                 type: 'separator'
             },
             {
                 label: 'Cadastro de veículos',
-                click: () => vadcarrosiosWindow() 
+                click: () => vadcarrosiosWindow()
             },
             {
                 type: 'separator'
@@ -298,3 +305,37 @@ const template = [
         ]
     }
 ]
+
+// ===========================================================
+// Clientes - CRUD Create
+
+// Recebimento do objeto que contém os dados do cliente
+ipcMain.on('new-client', async (event, client) => {
+    // Importante! Teste de recebimento dos dados do cliente
+    console.log(client)
+
+    // Cadastrar a estrutura de dados no banco de dados mongoDB
+    try {
+        // Criar uma nova estrutura de dados usando a classe modelo. Atenção! Os atributos precisam ser identicos ao mdelo de dados Clientes.js e os valores são definidos pelo conteúdo do objeto client
+        const newClient = new clientModel({
+            nomeCliente: client.nameCli,
+            cpfCliente: client.cpfCli,
+            emailCliente: client.emailCli,
+            foneCliente: client.phoneCli,
+            cepCliente: client.cepCli,
+            logradouroCliente: client.addressCli,
+            numeroCliente: client.numberCli,
+            complementoCliente: client.complementCli,
+            bairroCliente: client.neighborhoodCli,
+            cidadeCliente: client.cityCli,
+            ufCliente: client.ufCli,
+        })
+        // Salvar os dados do cliente no banco de dados
+        await newClient.save()
+    } catch (error) {
+        console.log(error)
+    }
+})
+
+// Fim - Clientes - CRUD CREATE
+// ===========================================================
