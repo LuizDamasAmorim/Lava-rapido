@@ -43,6 +43,6 @@ frmOS.addEventListener('submit', async (event) => {
     }
     // Enviar ao main o objeto client - (Passo 2: fluxo)
     // Uso do preload.js
-    api.newOS(os) 
+    api.newOs(os) 
 })
 // == Fim CRUD Create/Update ==================================================================

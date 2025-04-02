@@ -1,5 +1,7 @@
 console.log("Processo principal")
 
+//Importação do modelo de dados do cliente
+const clienteModel = require("./src/models/os.js")
 // Importações =========================================================================================
 
 const { app, BrowserWindow, nativeTheme, Menu, ipcMain, dialog, shell} = require('electron')
@@ -21,9 +23,12 @@ const { jspdf, default: jsPDF } = require('jspdf')
 // Importação da biblioteca fs (nativa do JavaScript) para manipulação de arquivos pdf
 const fs = require('fs')
 
-// ====================================================================================================
+// =====================================================================================================
 
-// Janela principal 
+
+
+
+// Janela principal ====================================================================================
 let win
 const createWindow = () => {
     // a linha abaixo define o tema (claro ou escuro)
@@ -41,7 +46,13 @@ const createWindow = () => {
         }
     })
 
-    //Menu personalizado
+// Fim - Janela principal ===========================================================================
+
+
+
+    
+// Menu personalizado ===============================================================================
+
     Menu.setApplicationMenu(Menu.buildFromTemplate(template))
 
     win.loadFile('./src/views/index.html')
@@ -63,6 +74,12 @@ const createWindow = () => {
         funcionariosWindow()
     })
 }
+// Fim - Menu personalizado =========================================================================
+
+
+
+
+// Janelas ==========================================================================================
 
 //Janela sobre
 function aboutWindow() {
@@ -165,8 +182,12 @@ function funcionariosWindow() {
     funcionarios.loadFile('./src/views/funcionarios.html')
     funcionarios.center() // centralizar funcionarios
 }
+// Fim - Janelas ===========================================================================
 
-// Iniciar a aplicação  
+
+
+
+// Iniciar a aplicação =====================================================================
 
 app.whenReady().then(() => {
     createWindow()
@@ -204,9 +225,12 @@ ipcMain.on('db-connect', async (event) => {
 app.on('before-quit', () => {
     desconectar()
 })
+// fim -Iniciar a aplicação ================================================================
 
 
-// Template do menu
+
+
+// Template do menu ========================================================================
 const template = [
     {
         label: 'Cadastro',
@@ -321,9 +345,12 @@ const template = [
         ]
     }
 ]
+// Fim - Template do menu ============================================================================
 
 
-// Clientes - CRUD Create ==================================================================
+
+
+// Clientes - CRUD Create ============================================================================
 
 // Recebimento do objeto que contém os dados do cliente
 ipcMain.on('new-client', async (event, client) => {
@@ -384,7 +411,8 @@ ipcMain.on('new-client', async (event, client) => {
 
 
 
-// == Relatório dos clientes ===========================================================
+
+// == Relatório dos clientes ====================================================================
 
 async function relatorioClientes() {
     try {
@@ -396,8 +424,18 @@ async function relatorioClientes() {
         // Passo 2: Formatação do documento pdf 
         // p - portrait | l - landscape | mm e a4 (folha)
         const doc = new jsPDF('p', 'mm', 'a4')
+
+        // Inserir imagens no documento PDF
+        // imagePath (caminho da imagem que será inserida no pfd)
+        const imagePath = path.join(__dirname, 'src', 'public', 'img', 'logotubarao64x64.png')
+
+        // imageBase64 (Uso da biblioteca fs para ler o arquivo no formato png)
+        const imageBase64 = fs.readFileSync(imagePath, { encoding: 'base64' })
+
+        doc.addImage(imageBase64, 'PNG', 170, 15) //(eixo X: 5mm, eixo Y: 8mm)
+
         // definir o tamanho da fonte (tamanho equivalente ao word)
-        doc.setFontSize(16)
+        doc.setFontSize(18)
         
         // Escrevendo um texto (titulo)
         doc.text("Relatório de clientes", 14, 20)//x, y (mm)  (x é horizontal(margem)) (y é vertical)
@@ -417,6 +455,39 @@ async function relatorioClientes() {
         doc.setLineWidth(0.5) // espessura da linha 
         doc.line(10, y, 200, y) // 10 (Inicio) ------- 200 (fim)
 
+        // renderizar os clientes cadastrados no banco
+        y += 10 // Espaçamento da linha
+
+        // Percorrer o vetor clientes(obtido no banco) usando o laço forEach (equivale a laço for)
+        clientes.forEach((c) => {
+            // Adicionar outra página se a folha inteira for preenchida (estratégia  é saber o tamanho da folha)
+            //  folha A4 y = 297mm
+            if (y > 280) {
+                doc.addPage()
+                y = 20 // resetar a variável y
+
+                doc.text("Nome", 14, y)
+                doc.text("Telefone", 80, y)
+                doc.text("Email", 130, y)
+                y += 5
+                doc.setLineWidth(0.5)
+                doc.line(10, y, 200, y)
+                y += 10
+            }
+
+            doc.text(c.nomeCliente, 14, y)
+            doc.text(c.foneCliente, 80, y)
+            doc.text(c.emailCliente || "N/A", 130, y)
+            y += 10 // Quebra de linha 
+        })
+
+        const paginas = doc.internal.getNumberOfPages()
+        for (let i = 1; i <= paginas; i++) {
+            doc.setPage(i)
+            doc.setFontSize(10)
+            doc.text(`Pagina ${i} de ${paginas}`, 105, 290, {align: 'center'})
+        }
+
         // Definir o caminho do arquivo temporário
         const tempDir = app.getPath('temp')
         const filePath = path.join(tempDir, 'clientes.pdf')
@@ -427,6 +498,48 @@ async function relatorioClientes() {
     } catch (error) {
         console.log(error)
     }
-    
+
 }
 // === Fim - Relatório dos clientes ===================================================
+
+
+
+
+// Crud OS ============================================================================
+
+ipcMain.on('new-os', async (event,os)=>{
+  console.log(os)
+  try {
+    const newOs = new osModel({
+      PlacaOS: os.PlacaOs,
+      funcionarioResponsavel: os.fun,
+      bicicleta: os.bike,
+      numeroSerieBicicleta: os.numQuadro,
+      corBicicleta: os.cor,
+      tipoManutencao: os.manutencao,
+      previsaoEntrega: os.previsaoEntrega,
+      observacaoCliente: os.obsCliente,
+      conclusaoTecnico: os.obsFuncionario,
+      pecasTroca: os.pecas,
+      acessorios: os.acessorios,
+      total: os.total,
+      formasPagamento: os.formasPagamento
+    })
+      await  newOs.save()
+      dialog.showMessageBox({
+        type: 'info',
+        title: "Aviso",
+        message: "Os adicionado com sucesso",
+        buttons: ['OK']
+      }).then((result)=>{
+        if(result.response === 0){
+         event.reply('reset-form') 
+        }
+         
+      })
+  } catch (error) {
+    console.log(error)
+  }
+})
+
+// Fim - Crud OS ======================================================================

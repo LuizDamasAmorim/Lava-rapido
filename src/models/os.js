@@ -9,7 +9,7 @@ const { version, type } = require('os')
 
 //Criação da estrutura da coleção OS
 const cadastroOS = new Schema({
-    nomeCliente: {
+    placaOs: {
         type: String
     },
     prazodeFim: {
