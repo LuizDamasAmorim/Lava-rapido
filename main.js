@@ -4,7 +4,7 @@ console.log("Processo principal")
 const clienteModel = require("./src/models/os.js")
 // Importações =========================================================================================
 
-const { app, BrowserWindow, nativeTheme, Menu, ipcMain, dialog, shell} = require('electron')
+const { app, BrowserWindow, nativeTheme, Menu, ipcMain, dialog, shell } = require('electron')
 
 // shell serve para importar pdf
 
@@ -16,6 +16,13 @@ const { conectar, desconectar } = require("./database.js")
 
 // Importação dos métodos conectar e desconectar (módulo de conexão)
 const clientModel = require('./src/models/Clientes.js')
+
+//Importação do modelo de dados da Os
+const osModel = require("./src/models/os.js")
+
+//Importação do modelo de dados dos veículos
+const veiculoModel = require("./src/models/cadcarros.js")
+
 
 // Importação do pacote jspdf (npm i jspdf)
 const { jspdf, default: jsPDF } = require('jspdf')
@@ -46,12 +53,12 @@ const createWindow = () => {
         }
     })
 
-// Fim - Janela principal ===========================================================================
+    // Fim - Janela principal ===========================================================================
 
 
 
-    
-// Menu personalizado ===============================================================================
+
+    // Menu personalizado ===============================================================================
 
     Menu.setApplicationMenu(Menu.buildFromTemplate(template))
 
@@ -140,7 +147,11 @@ function cadcarrosWindow() {
             height: 720,
             //autoHideMenuBar: true,
             parent: main,
-            modal: true
+            modal: true,
+            //Ativação do preload.js
+            webPreferences: {
+                preload: path.join(__dirname, 'preload.js')
+            }
         })
     }
     cadcarros.loadFile('./src/views/cadcarros.html')
@@ -158,7 +169,11 @@ function servicosWindow() {
             height: 720,
             //autoHideMenuBar: true,
             parent: main,
-            modal: true
+            modal: true,
+            //Ativação do preload.js
+            webPreferences: {
+                preload: path.join(__dirname, 'preload.js')
+            }
         })
     }
     servicos.loadFile('./src/views/servicos.html')
@@ -376,8 +391,8 @@ ipcMain.on('new-client', async (event, client) => {
         // Salvar os dados do cliente no banco de dados
         await newClient.save()
 
-         // Mensagem de confirmação 
-         dialog.showMessageBox({
+        // Mensagem de confirmação 
+        dialog.showMessageBox({
             // Customização 
             type: 'info',
             title: "Aviso",
@@ -385,20 +400,20 @@ ipcMain.on('new-client', async (event, client) => {
             buttons: ['OK']
         }).then((result) => {
             // Ação ao pressionar o botão (result = 0)
-            if(result.response === 0){
+            if (result.response === 0) {
                 // Enviar um pedido para o renderizador limpar os campos e resetar as configurações pré definidas (rotulo 'reset-form' do preload.js)
                 event.reply('reset-form')
             }
         })
     } catch (error) {
         //  Se o código de erro for 11000 (cpf duplicado) enviar uma mensagem ao usuario 
-        if(error.code === 11000) {
+        if (error.code === 11000) {
             dialog.showMessageBox({
                 type: 'error',
                 title: "Atenção!",
                 message: "CPF ja está cadastrado\nVerifique se digitou corretamente",
                 buttons: ['OK']
-            }).then((result)=> {
+            }).then((result) => {
                 if (result.response === 0) {
                     // 
                 }
@@ -417,7 +432,7 @@ ipcMain.on('new-client', async (event, client) => {
 async function relatorioClientes() {
     try {
         // Passo 1: Consultar o banco de dados e obter a listagem de clientes cadasrtrados por ordem alfabética
-        const clientes = await clientModel.find().sort({nomeCliente: 1})
+        const clientes = await clientModel.find().sort({ nomeCliente: 1 })
         // Teste de recebimento da listagem de clientes
         // console.log(clientes)
 
@@ -436,7 +451,7 @@ async function relatorioClientes() {
 
         // definir o tamanho da fonte (tamanho equivalente ao word)
         doc.setFontSize(18)
-        
+
         // Escrevendo um texto (titulo)
         doc.text("Relatório de clientes", 14, 20)//x, y (mm)  (x é horizontal(margem)) (y é vertical)
 
@@ -450,7 +465,7 @@ async function relatorioClientes() {
         doc.text("Nome", 14, y)
         doc.text("Telefone", 80, y)
         doc.text("Email", 130, y)
-        y += 5 
+        y += 5
         //  Desenhar a linnha 
         doc.setLineWidth(0.5) // espessura da linha 
         doc.line(10, y, 200, y) // 10 (Inicio) ------- 200 (fim)
@@ -485,7 +500,7 @@ async function relatorioClientes() {
         for (let i = 1; i <= paginas; i++) {
             doc.setPage(i)
             doc.setFontSize(10)
-            doc.text(`Pagina ${i} de ${paginas}`, 105, 290, {align: 'center'})
+            doc.text(`Pagina ${i} de ${paginas}`, 105, 290, { align: 'center' })
         }
 
         // Definir o caminho do arquivo temporário
@@ -507,39 +522,71 @@ async function relatorioClientes() {
 
 // Crud OS ============================================================================
 
-ipcMain.on('new-os', async (event,os)=>{
-  console.log(os)
-  try {
-    const newOs = new osModel({
-      PlacaOS: os.PlacaOs,
-      funcionarioResponsavel: os.fun,
-      bicicleta: os.bike,
-      numeroSerieBicicleta: os.numQuadro,
-      corBicicleta: os.cor,
-      tipoManutencao: os.manutencao,
-      previsaoEntrega: os.previsaoEntrega,
-      observacaoCliente: os.obsCliente,
-      conclusaoTecnico: os.obsFuncionario,
-      pecasTroca: os.pecas,
-      acessorios: os.acessorios,
-      total: os.total,
-      formasPagamento: os.formasPagamento
-    })
-      await  newOs.save()
-      dialog.showMessageBox({
-        type: 'info',
-        title: "Aviso",
-        message: "Os adicionado com sucesso",
-        buttons: ['OK']
-      }).then((result)=>{
-        if(result.response === 0){
-         event.reply('reset-form') 
-        }
-         
-      })
-  } catch (error) {
-    console.log(error)
-  }
+ipcMain.on('new-os', async (event, os) => {
+    console.log(os)
+
+
+    try {
+        const newOs = new osModel({
+            placaOs: os.placaOrderservice,
+            prazodeFim: os.prazoOrderservice,
+            funResponsavel: os.funResponsavel,
+            statusDaOS: os.statusOrderservice,
+            valor: os.valorOrderservice
+        })
+        await newOs.save()
+        
+        dialog.showMessageBox({
+            type: 'info',
+            title: "Aviso",
+            message: "Os adicionada com sucesso",
+            buttons: ['OK']
+        }).then((result) => {
+            if (result.response === 0) {
+                event.reply('reset-form')
+            }
+
+        })
+    } catch (error) {
+        console.log(error)
+    }
+})
+
+// Fim - Crud OS ======================================================================
+
+
+
+
+// Crud Veículos ======================================================================
+
+ipcMain.on('new-veiculo', async (event, veiculo) => {
+    console.log(veiculo)
+
+
+    try {
+        const newVeiculo = new veiculoModel({
+            modeloVeiculo: veiculo.modeloVeiculo,
+            anoVeiculo: veiculo.anoVeiculo,
+            corVeiculo: veiculo.corVeiculo,
+            tipoVeiculo: veiculo.tipoVeiculo,
+            placaVeiculo: veiculo.placaVeiculo
+        })
+        await newVeiculo.save()
+        
+        dialog.showMessageBox({
+            type: 'info',
+            title: "Aviso",
+            message: "Veículo cadastrado com sucesso",
+            buttons: ['OK']
+        }).then((result) => {
+            if (result.response === 0) {
+                event.reply('reset-form')
+            }
+
+        })
+    } catch (error) {
+        console.log(error)
+    }
 })
 
 // Fim - Crud OS ======================================================================

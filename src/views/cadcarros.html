@@ -19,7 +19,7 @@
         <h1 class="d-flex justify-content-center mb-4">Cadastro de carros</h1>
 
         <div class="container">
-            <form id="frmClient" class="mt-2 row g-3">
+            <form id="frmVeiculo" class="mt-2 row g-3">
                 <!-- Buscar carro -->
                 <div class="col-md-6">
                     <input type="text" class="form-control" id="searchCar" maxlength="30" spellcheck="false">
@@ -67,6 +67,7 @@
                     <button type="submit" class="btn btn-primary" id="btnCreate">Adicionar</button>
                     <button type="submit" class="btn border-primary text-primary" id="btnUpdate">Editar</button>
                     <button type="button" class="btn btn-danger" id="btnDelete">Excluir</button>
+
                     <button type="reset" class="btn" id="btnReset" onclick="resetForm()"></button>
                  </div>
     
@@ -76,5 +77,8 @@
 
     <!-- Bootstrap -->
     <script src="../public/js/bootstrap.min.js"></script>
+
+     <!-- Renderizador -->
+     <script src="rendererVeiculo.js"></script>
 </body>
 </html>

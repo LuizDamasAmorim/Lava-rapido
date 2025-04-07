@@ -5,7 +5,6 @@
 
 //Importação dos recursos do framework mongoose
 const {model, Schema} = require('mongoose')
-const { version, type } = require('os')
 
 //Criação da estrutura da coleção OS
 const cadastroOS = new Schema({
@@ -18,15 +17,15 @@ const cadastroOS = new Schema({
     funResponsavel: {
         type: String
     },
-    valor: {
+    statusDaOS: {
         type: String
     },
-    statusDaOS: {
+    valor: {
         type: String
     }
 }, {versionKey: false}) //Não versionar os dados armazenadas
 
 //Exportar para o main o modelo de dados
-//cadastroOS será o nome da coleção
+//OS será o nome da coleção
 
 module.exports = model('OS', cadastroOS)

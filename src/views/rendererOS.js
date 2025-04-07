@@ -1,6 +1,6 @@
-// ====================== Capturar o foco na busca pelo nome  cliente =========================
+// ====================== Capturar o foco na busca pelo nome cliente =========================
 // A constante foco obtem o elemento html (input) identificação como 'searchClient'
-const foco = document.getElementById('searchClient')
+const foco = document.getElementById('searchOS')
 
 // Iniciar a janela de clientes alterando as propiedades de alguns elementos
 document.addEventListener('DOMContentLoaded', () => {
@@ -33,6 +33,7 @@ frmOS.addEventListener('submit', async (event) => {
     event.preventDefault()
     // Teste importante (recebimento dos dados do formulário - passo 1 do fluxo)
     console.log(PlacaOS.value, PrazoOS.value, FuncionarioOS.value, osStatus.value, ValorOS.value)
+
     // Criarum objeto para armazenar os dados do cliente antes de enviar ao main 
     const os = {
         placaOrderservice: PlacaOS.value,
@@ -44,5 +45,23 @@ frmOS.addEventListener('submit', async (event) => {
     // Enviar ao main o objeto client - (Passo 2: fluxo)
     // Uso do preload.js
     api.newOs(os) 
+
 })
 // == Fim CRUD Create/Update ==================================================================
+
+
+
+// == Reset Form ===============================================================
+function resetForm () {
+    // Limpar os campos e resetar o formulário com as configurações pré definidas
+    location.reload() //Recarrega as configyrções predefinidas
+}
+
+// Recebimento do pedido do main para resetar o formuário
+api.resetForm((args) =>{
+    resetForm()
+})
+
+// == Fim - Reset Form =========================================================
+
+

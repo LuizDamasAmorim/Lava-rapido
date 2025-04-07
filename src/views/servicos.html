@@ -37,8 +37,8 @@
                     Buscar Clientes
                 </label>
                 <div class="d-flex">
-                    <input type="text" class="form-control" id="searchClient" maxlength="30" spellcheck="false">
-                    <button type="button" class="btn btn-primary" id="btnRead" onclick="searchClient()">Buscar</button>
+                    <input type="text" class="form-control" id="searchOS" maxlength="30" spellcheck="false">
+                    <button type="button" class="btn btn-primary" id="btnRead" onclick="searchOS()">Buscar</button>
                 </div>
             </div>
 
@@ -103,15 +103,19 @@
         
 
             <div class="mt-5">
-                <button type="button" class="btn btn-primary">Gerar OS</button>
-                <button type="button" class="btn border-primary text-primary">Editar OS</button>
-                <button type="button" class="btn btn-danger">Excluir OS</button>
-                <button type="button" class="btn btn-secondary">Imprimir OS</button>
+                <button type="submit" class="btn btn-primary" id="btnCreate">Gerar Os</button>
+                <button type="submit" class="btn border-primary text-primary" id="btnUpdate">Editar</button>
+                <button type="button" class="btn btn-danger" id="btnDelete">Excluir</button>
+
+                <button type="reset" class="btn" id="btnReset" onclick="resetForm()"></button>
         </form>
     </div>
 
     <!-- Bootstrap -->
     <script src="../public/js/bootstrap.min.js"></script>
+
+    <!-- Renderizador -->
+    <script src="rendererOS.js"></script>
 </body>
 
 </html>
