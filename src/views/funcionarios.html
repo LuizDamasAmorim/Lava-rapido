@@ -16,13 +16,13 @@
 <body>
     <div class="container">
         <h1 class="d-flex justify-content-center mb-4">Funcionários</h1>
-        <form id="frmClient" class="mt-2 row g-3">
+        <form id="frmFunc" class="mt-2 row g-3">
             <!-- Buscar cliente -->
             <div class="col-md-6">
-                <input type="text" class="form-control" id="searchClient" maxlength="30" spellcheck="false">
+                <input type="text" class="form-control" id="searchFunc" maxlength="30" spellcheck="false">
             </div>
             <div class="col-md-4">
-                <button type="button" class="btn btn-primary" id="btnRead" onclick="searchClient()">Buscar</button>
+                <button type="button" class="btn btn-primary" id="btnRead" onclick="searchFunc()">Buscar</button>
             </div>
 
             <!-- Linha -->
@@ -30,44 +30,44 @@
 
             <!-- Nome -->
             <div class="col-md-8">
-                <label for="inputNameClient" class="form-label">Nome</label>
-                <input type="text" class="form-control" id="inputNameClient" spellcheck="false" required maxlength="30">
+                <label for="inputNameFunc" class="form-label">Nome</label>
+                <input type="text" class="form-control" id="inputNameFunc" spellcheck="false" required maxlength="30">
             </div>
 
             <!-- CPF  -->
             <div class="col-md-4">
-                <label for="inputCPFClient" class="form-label">CPF</label>
-                <input type="text" class="form-control" id="inputCPFClient" spellcheck="false" maxlength="15">
+                <label for="inputCPFFunc" class="form-label">CPF</label>
+                <input type="text" class="form-control" id="inputCPFFunc" spellcheck="false" maxlength="15">
             </div>
 
             <!-- E-mail  -->
             <div class="col-md-6">
-                <label for="inputEmaillient" class="form-label">E-mail</label>
-                <input type="email" class="form-control" id="inputEmaillient" spellcheck="false" maxlength="30">
+                <label for="inputEmailFunc" class="form-label">E-mail</label>
+                <input type="email" class="form-control" id="inputEmailFunc" spellcheck="false" maxlength="30">
             </div>
 
             <!-- Telefone  -->
             <div class="col-md-4">
-                <label for="inputPhoneClient" class="form-label">Telefone</label>
-                <input type="text" class="form-control" id="inputPhoneClient" spellcheck="false" required maxlength="15">
+                <label for="inputPhoneFunc" class="form-label">Telefone</label>
+                <input type="text" class="form-control" id="inputPhoneFunc" spellcheck="false" required maxlength="15">
             </div>
 
             <!-- Cargos  -->
             <div class="col-md-4">
-                <label for="inputCargoClient" class="form-label">Cargo</label>
-                <input type="text" class="form-control" id="inputCargoClient" spellcheck="false" required maxlength="30">
+                <label for="inputCargoFunc" class="form-label">Cargo</label>
+                <input type="text" class="form-control" id="inputCargoFunc" spellcheck="false" required maxlength="30">
             </div>
 
             <!-- Horario de Expediente  -->
             <div class="col-md-2">
-                <label for="inputHoraClient" class="form-label">Hora</label>
-                <input type="time" class="form-control" id="inputHoraClient" spellcheck="false" required maxlength="5">
+                <label for="inputHoraFunc" class="form-label">Hora Expediente</label>
+                <input type="time" class="form-control" id="inputHoraFunc" spellcheck="false" required maxlength="5">
             </div>
 
             <!-- Salário  -->
             <div class="col-md-2">
-                <label for="inputSalarioClient" class="form-label">Salário</label>
-                <input type="number" class="form-control" id="inputSalarioClient" spellcheck="false" required maxlength="25">
+                <label for="inputSalarioFunc" class="form-label">Salário</label>
+                <input type="number" class="form-control" id="inputSalarioFunc" spellcheck="false" required maxlength="25">
             </div>
 
 
@@ -84,5 +84,8 @@
 
     <!-- Bootstrap -->
     <script src="../public/js/bootstrap.min.js"></script>
+
+    <!-- Renderizador -->
+    <script src="rendererFuncionarios.js"></script>
 </body>
 </html>

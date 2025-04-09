@@ -19,7 +19,7 @@ let frmOS = document.getElementById('frmOS')
 let PlacaOS = document.getElementById('inputPlacaOS')
 let PrazoOS = document.getElementById('inputPrazoOS')
 let FuncionarioOS = document.getElementById('inputFuncionarioOS')
-let osStatus = document.getElementById('inputOsStatus')
+let OsTipo = document.getElementById('inputOsTipo')
 let ValorOS = document.getElementById('inputValorOS')
 // ============================================================================================
 
@@ -32,14 +32,14 @@ frmOS.addEventListener('submit', async (event) => {
     // Evitar o comportamento padrão do submit, que é enviar os dados do formulário e reiniciar o documento html
     event.preventDefault()
     // Teste importante (recebimento dos dados do formulário - passo 1 do fluxo)
-    console.log(PlacaOS.value, PrazoOS.value, FuncionarioOS.value, osStatus.value, ValorOS.value)
+    console.log(PlacaOS.value, PrazoOS.value, FuncionarioOS.value, OsTipo.value, ValorOS.value)
 
     // Criarum objeto para armazenar os dados do cliente antes de enviar ao main 
     const os = {
         placaOrderservice: PlacaOS.value,
         prazoOrderservice: PrazoOS.value,
         FuncOrderservice: FuncionarioOS.value,
-        statusOrderservice: osStatus.value,
+        statusOsTipoLavagem: OsTipo.value,
         valorOrderservice: ValorOS.value,
     }
     // Enviar ao main o objeto client - (Passo 2: fluxo)

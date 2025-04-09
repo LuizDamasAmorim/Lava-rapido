@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Captura dos dados dos inputs do formulário (Passo 1: Fluxo)
 let frmVeiculo = document.getElementById('frmVeiculo')
+let MarcaCar = document.getElementById('inputMarcaCar')
 let ModelCar = document.getElementById('inputModeloCar')
 let AnoCar = document.getElementById('inputAnoCar')
 let CorCar = document.getElementById('inputCorCar')
@@ -30,11 +31,12 @@ frmVeiculo.addEventListener('submit', async (event) => {
     // Evitar o comportamento padrão do submit, que é enviar os dados do formulário e reiniciar o documento html
     event.preventDefault()
     // Teste importante (recebimento dos dados do formulário - passo 1 do fluxo)
-    console.log(ModelCar.value, AnoCar.value, CorCar.value, TipoCar.value, PlacaCar.value)
+    console.log(MarcaCar.value, ModelCar.value, AnoCar.value, CorCar.value, TipoCar.value, PlacaCar.value)
     // Criarum objeto para armazenar os dados do cliente antes de enviar ao main 
 
 
     const veiculo = {
+        marcaVeiculo: MarcaCar.value,
         modeloVeiculo: ModelCar.value,
         anoVeiculo: AnoCar.value,
         corVeiculo: CorCar.value,

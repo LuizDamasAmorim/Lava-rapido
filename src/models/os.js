@@ -17,7 +17,7 @@ const cadastroOS = new Schema({
     funResponsavel: {
         type: String
     },
-    statusDaOS: {
+    TipoDeLavagem: {
         type: String
     },
     valor: {

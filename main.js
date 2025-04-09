@@ -23,6 +23,8 @@ const osModel = require("./src/models/os.js")
 //Importação do modelo de dados dos veículos
 const veiculoModel = require("./src/models/cadcarros.js")
 
+//Importação do modelo de dados dos veículos
+const funcionarioModel = require("./src/models/funcionarios.js")
 
 // Importação do pacote jspdf (npm i jspdf)
 const { jspdf, default: jsPDF } = require('jspdf')
@@ -102,7 +104,7 @@ function aboutWindow() {
         // Criar a janela sobre
         about = new BrowserWindow({
             width: 360,
-            height: 220,
+            height: 240,
             autoHideMenuBar: true,
             resizable: false,
             minimizable: false,
@@ -144,7 +146,7 @@ function cadcarrosWindow() {
     if (main) {
         cadcarros = new BrowserWindow({
             width: 1010,
-            height: 720,
+            height: 550,
             //autoHideMenuBar: true,
             parent: main,
             modal: true,
@@ -191,7 +193,11 @@ function funcionariosWindow() {
             height: 720,
             //autoHideMenuBar: true,
             parent: main,
-            modal: true
+            modal: true,
+            //Ativação do preload.js
+            webPreferences: {
+                preload: path.join(__dirname, 'preload.js')
+            }
         })
     }
     funcionarios.loadFile('./src/views/funcionarios.html')
@@ -276,34 +282,6 @@ const template = [
                 label: 'Sair',
                 click: () => app.quit(),
                 accelerator: 'Alt+F4'
-            }
-        ]
-    },
-    {
-        label: 'Serviços',
-        submenu: [
-            {
-                label: 'Pendente'
-            },
-            {
-                label: 'Em andamento'
-            },
-            {
-                label: 'Concluidos'
-            },
-            {
-                label: 'Canceladas'
-            }
-        ]
-    },
-    {
-        label: 'Pagamentos',
-        submenu: [
-            {
-                label: 'Status do pagamento'
-            },
-            {
-                label: 'Forma de pagamento'
             }
         ]
     },
@@ -463,7 +441,7 @@ async function relatorioClientes() {
         // Variável de apoio na formatação 
         let y = 45
         doc.text("Nome", 14, y)
-        doc.text("Telefone", 80, y)
+        doc.text("Telefone", 90, y)
         doc.text("Email", 130, y)
         y += 5
         //  Desenhar a linnha 
@@ -482,7 +460,7 @@ async function relatorioClientes() {
                 y = 20 // resetar a variável y
 
                 doc.text("Nome", 14, y)
-                doc.text("Telefone", 80, y)
+                doc.text("Telefone", 90, y)
                 doc.text("Email", 130, y)
                 y += 5
                 doc.setLineWidth(0.5)
@@ -491,7 +469,7 @@ async function relatorioClientes() {
             }
 
             doc.text(c.nomeCliente, 14, y)
-            doc.text(c.foneCliente, 80, y)
+            doc.text(c.foneCliente, 90, y)
             doc.text(c.emailCliente || "N/A", 130, y)
             y += 10 // Quebra de linha 
         })
@@ -531,11 +509,11 @@ ipcMain.on('new-os', async (event, os) => {
             placaOs: os.placaOrderservice,
             prazodeFim: os.prazoOrderservice,
             funResponsavel: os.funResponsavel,
-            statusDaOS: os.statusOrderservice,
+            TipoDeLavagem: os.statusOsTipoLavagem,
             valor: os.valorOrderservice
         })
         await newOs.save()
-        
+
         dialog.showMessageBox({
             type: 'info',
             title: "Aviso",
@@ -565,6 +543,7 @@ ipcMain.on('new-veiculo', async (event, veiculo) => {
 
     try {
         const newVeiculo = new veiculoModel({
+            marcaVeiculo: veiculo.marcaVeiculo,
             modeloVeiculo: veiculo.modeloVeiculo,
             anoVeiculo: veiculo.anoVeiculo,
             corVeiculo: veiculo.corVeiculo,
@@ -572,11 +551,49 @@ ipcMain.on('new-veiculo', async (event, veiculo) => {
             placaVeiculo: veiculo.placaVeiculo
         })
         await newVeiculo.save()
-        
+
         dialog.showMessageBox({
             type: 'info',
             title: "Aviso",
             message: "Veículo cadastrado com sucesso",
+            buttons: ['OK']
+        }).then((result) => {
+            if (result.response === 0) {
+                event.reply('reset-form')
+            }
+
+        })
+    } catch (error) {
+        console.log(error)
+    }
+})
+
+// Fim - Crud OS ======================================================================
+
+
+
+// Crud Funcionários ======================================================================
+
+ipcMain.on('new-funcionario', async (event, funcionario) => {
+    console.log(funcionario)
+
+
+    try {
+        const newFuncionario = new funcionarioModel({
+            nomeFunc: funcionario.nomeF,
+            cpfFunc: funcionario.cpfF,
+            emailFunc: funcionario.emailF,
+            foneFunc: funcionario.foneF,
+            cargoFunc: funcionario.cargoF,
+            horaFunc: funcionario.horaF,
+            salarioFunc: funcionario.salarioF
+        })
+        await newFuncionario.save()
+
+        dialog.showMessageBox({
+            type: 'info',
+            title: "Aviso",
+            message: "Funcionário cadastrado com sucesso",
             buttons: ['OK']
         }).then((result) => {
             if (result.response === 0) {

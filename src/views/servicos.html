@@ -17,20 +17,18 @@
     <div class="container">
         <form id="frmOS" class="mt-2 row g-3">
 
-            <h1 class="d-flex justify-content-center mb-4">OS</h1>
-
-            <!-- OS -->
-            <div class="col-md-4">
-                <label class="form-label">Nº OS</label>
+            <!-- Marca -->
+            <div class="col-md-3">
+                <label class="form-label">Marca</label>
                 <input type="text" class="form-control" id="txtOs" disabled>
             </div>
 
-            <!-- Data -->
+            <!-- Modelo -->
             <div class="col-md-3">
-                <label class="form-label">Data</label>
-                <input type="text" class="form-control" id="txtData" disabled>
+                <label class="form-label">Modelo</label>
+                <input type="text" class="form-control" id="txtOs" disabled>
             </div>
-
+    
             <!-- Buscar cliente -->
             <div class="col-md-4" id="buscarclientes">
                 <label for="inputnumeroOS" class="form-label">
@@ -42,22 +40,34 @@
                 </div>
             </div>
 
-            <!-- Nome -->
-            <div class="col-md-5">
-                <label for="inputNameClient" class="form-label">Nome</label>
+            <!-- Data de Entrada -->
+            <div class="col-md-3">
+                <label class="form-label">Data de Entrada</label>
+                <input type="text" class="form-control" id="txtData" disabled>
+            </div>
+
+            <!-- Ano -->
+            <div class="col-md-2">
+                <label for="inputNameClient" class="form-label">Ano</label>
                 <input type="text" class="form-control" id="inputNameClient" spellcheck="false" maxlength="30" disabled>
             </div>
 
-            <!-- Telefone -->
-            <div class="col-md-3">
-                <label for="inputPhoneClient" class="form-label">Telefone</label>
+            <!-- Cor -->
+            <div class="col-md-2">
+                <label for="inputPhoneClient" class="form-label">Cor</label>
                 <input type="text" class="form-control" id="inputPhoneClient" spellcheck="false" maxlength="15"
                     disabled>
             </div>
 
-            <!-- CPF -->
-            <div class="col-md-4">
-                <label for="inputCPFClient" class="form-label">CPF</label>
+            <!-- Tipo -->
+            <div class="col-md-3">
+                <label for="inputCPFClient" class="form-label">Tipo</label>
+                <input type="text" class="form-control" id="inputCPFClient" spellcheck="false" maxlength="15" disabled>
+            </div>
+
+            <!-- Placa -->
+            <div class="col-md-3">
+                <label for="inputCPFClient" class="form-label">Placa</label>
                 <input type="text" class="form-control" id="inputCPFClient" spellcheck="false" maxlength="15" disabled>
             </div>
 
@@ -85,13 +95,14 @@
 
             <!-- Status -->
             <div class="col-md-6">
-                <label class="form-label">Status da OS</label>
-                <select class="form-select" id="inputOsStatus">
+                <label class="form-label">Tipo de lavagem</label>
+                <select class="form-select" id="inputOsTipo">
                     <option value=""></option>
-                    <option>Aberta</option>
-                    <option>Em andamento</option>
-                    <option>Finalizada</option>
-                    <option>Cancelada</option>
+                    <option>Lavagem</option>
+                    <option>Escovação</option>
+                    <option>Jateamento</option>
+                    <option>Lixamento</option>
+                    <option>Aspiração</option>
                 </select>
             </div>
 

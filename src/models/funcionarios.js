@@ -1,33 +1,38 @@
 /**
  * Modelo de dados para construção das coleções("tabelas")
- * Cadcarros
+ * Clientes
  */
 
 // Importação dos recursos do framework mongoose
 const { model, Schema } = require('mongoose')
 
 // Criação da estrutura da coleção Clientes
-const veiculoSchema = new Schema({
-    marcaVeiculo: {
+const funcionariosSchema = new Schema({
+    nomeFunc: {
         type: String
     },
-    modeloVeiculo: {
-        type: String
-    },
-    anoVeiculo:{
+    cpfFunc:{
         type: String,
+        unique: true,
+        index: true
     },
-    corVeiculo: {
+    emailFunc: {
         type: String
     },
-    tipoVeiculo: {
+    foneFunc: {
         type: String
     },
-    placaVeiculo: {
+    cargoFunc: {
+        type: String
+    },
+    horaFunc: {
+        type: String
+    },
+    salarioFunc: {
         type: String
     }
 }, {versionKey: false}) // Não versionar os dados armazenados
 
 // Exportar para o main o modelo de dados 
 // OBS: Clientes será o nome da coleção
-module.exports = model('Veiculos', veiculoSchema)
+module.exports = model('Funcionarios', funcionariosSchema)
