@@ -25,6 +25,9 @@ function buscarCEP() {
         .catch(error => console.log(error))
 }
 
+// Vetor global que será usado na manipulação dos dados 
+let arrayClient = []
+
 // Capturar o foco na busca pelo nome  cliente
 // A constante foco obtem o elemento html (input) identificação como 'searchClient'
 const foco = document.getElementById('searchClient')
@@ -88,6 +91,48 @@ frmClient.addEventListener('submit', async (event) => {
     api.newClient(client) 
 })
 // == Fim CRUD Create/Update ===================================================
+// =============================================================================
+
+
+
+// == CRUD Read ================================================================
+// =============================================================================
+
+function buscarCliente(){
+    // Passo 1: capturar o nome do cliente
+    let name = document.getElementById('searchClient').value
+
+    console.log(name) // Teste do passo 1
+    api.searchName(name) // Passo 2: envio do nome ao main
+
+    // Recebimento dos dados do cliente 
+    api.renderClient((event, dataClient) => {
+        console.log(dataClient) // Teste do passo 5
+        // Passo 6: renderizar os dados do cliente no formulário
+        // - Criar um vetor global para manipulação dos dados
+        // - Criar uma constante para converter os dados recebidos que estão no formato string para o formato JASON (JASON.parse)
+        // Usar o laço forEatch para percorrer o vetor e setar os campos (caixas de texto do formulário)
+        const dadosCliente = JSON.parse(dataClient)
+        // atribuir ao vetor os dados do cliente 
+        arrayClient = dadosCliente
+        // extrair os dados do cliente
+        arrayClient.forEach((c)=>{
+            nameClient.value = c.nomeCliente,
+            cpfClient.value = c.cpfCliente,
+            emailClient.value = c.emailCliente,
+            phoneClient.value = c.foneCliente,
+            cepClient.value = c.cepCliente,
+            addressClient.value = c.logradouroCliente,
+            numberClient.value = c.numeroCliente,
+            complementClient.value = c.complementoCliente,
+            neighborhoodClient.value = c.bairroCliente,
+            cityClient.value = c.cidadeCliente,
+            ufClient.value = c.ufCliente
+        })
+    })
+}
+
+// == Fim CRUD Read ============================================================
 // =============================================================================
 
 

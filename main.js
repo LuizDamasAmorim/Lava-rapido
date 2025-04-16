@@ -572,7 +572,7 @@ ipcMain.on('new-veiculo', async (event, veiculo) => {
 
 
 
-// Crud Funcionários ======================================================================
+// Crud Funcionários ==================================================================
 
 ipcMain.on('new-funcionario', async (event, funcionario) => {
     console.log(funcionario)
@@ -607,3 +607,34 @@ ipcMain.on('new-funcionario', async (event, funcionario) => {
 })
 
 // Fim - Crud OS ======================================================================
+
+
+
+
+// Crud Read ===========================================================================
+
+ipcMain.on('search-name', async (event, name) => {
+    //console.log("teste IPC search-name") ( *Dica para testar sempre passo a passo* usar o console.log primeiro e depois ir pro proximo passo)
+
+    //console.log(name) // Teste do passo 2 (Importante!)
+
+    // Passos 3 e 4: Busca dos dados do cliente no banco 
+
+    // find({nomeCliente: name}) - busca pelo nome
+    // RegExp(name, 'i') - i (insensitive / Ignorar maiúsculo ou minúsculo)
+    try{
+        const dataClient= await clientModel.find({
+            nomeCliente: new RegExp(name, 'i')
+        })
+        console.log(dataClient) // Teste passos 3 e 4 (importante!) 
+        // Passo 5: 
+        // Enviando os dados do cliente ao rendererCliente
+        // OBS: IPC so trabalha com string, então é necessario converter o JSON para JSON.stringify(dataClient)
+        event.reply('render-client', JSON.stringify(dataClient))
+
+    } catch (error) {
+        console.log(error)
+    }
+})
+
+// Fim - Crud Read ======================================================================
