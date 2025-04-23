@@ -41,6 +41,24 @@ document.addEventListener('DOMContentLoaded', () => {
     foco.focus()
 })
 
+
+// Captura dos dados dos inputs do formulário (Passo 1: Fluxo)
+let frmClient = document.getElementById('frmClient')
+let nameClient = document.getElementById('inputNameClient')
+let cpfClient = document.getElementById('inputCPFClient')
+let emailClient = document.getElementById('inputEmailClient')
+let phoneClient = document.getElementById('inputPhoneClient')
+let cepClient = document.getElementById('inputCEPClient')
+let addressClient = document.getElementById('inputAddressClient')
+let numberClient = document.getElementById('inputNumberClient')
+let complementClient = document.getElementById('inputComplementClient')
+let neighborhoodClient = document.getElementById('inputneighborhoodClient')
+let cityClient = document.getElementById('inputCityClient')
+let ufClient = document.getElementById('inputUFClient')
+// =============================================================================
+
+
+
 // Manipulação da tecla Enter ======================================================
 
 // Função para manipular o evento da tecla Enter 
@@ -63,20 +81,7 @@ frmClient.addEventListener('keydown', teclaEnter)
 
 // Fim - Manipulação da tecla Enter ================================================
 
-// Captura dos dados dos inputs do formulário (Passo 1: Fluxo)
-let frmClient = document.getElementById('frmClient')
-let nameClient = document.getElementById('inputNameClient')
-let cpfClient = document.getElementById('inputCPFClient')
-let emailClient = document.getElementById('inputEmailClient')
-let phoneClient = document.getElementById('inputPhoneClient')
-let cepClient = document.getElementById('inputCEPClient')
-let addressClient = document.getElementById('inputAddressClient')
-let numberClient = document.getElementById('inputNumberClient')
-let complementClient = document.getElementById('inputComplementClient')
-let neighborhoodClient = document.getElementById('inputneighborhoodClient')
-let cityClient = document.getElementById('inputCityClient')
-let ufClient = document.getElementById('inputUFClient')
-// =============================================================================
+
 
 
 // =============================================================================
@@ -163,20 +168,30 @@ function buscarCliente() {
     }
 }
 
-// setar o cliente não cadastrar (recortar do campo de busca de colar no campo nome)
+// Setar o cliente não cadastrado
 api.setClient((args) => {
-    // Criar uma variável para armazenar o valor digitado no campo de busca (nome ou cpf)
-    let campoBusca = document.getElementById('searchClient').value
+    let campoBusca = document.getElementById('searchClient').value.trim()
 
-    // Foco no canto de nome do cliente
-    nameClient.focus()
-
-    // Remover o valor digitado no campo de busca
-    foco.value = ""
-
-    // preencher o campo de nome do cliente com o nome da busca
-    nameClient.value = campoBusca
+    // Regex para verificar se o valor é só número (CPF)
+    if (/^\d{11}$/.test(campoBusca)) {
+        // É um número → CPF
+        cpfClient.focus()
+        foco.value = ""
+        cpfClient.value = campoBusca
+    }
+    else if (/^\d{3}\.\d{3}\.\d{3}-\d{2}$/.test(campoBusca)) {
+        cpfClient.focus()
+        foco.value = ""
+        cpfClient.value = campoBusca
+    }
+    else {
+        // Não é número → Nome
+        nameClient.focus()
+        foco.value = ""
+        nameClient.value = campoBusca
+    }
 })
+
 
 // == Fim CRUD Read ============================================================
 // =============================================================================
