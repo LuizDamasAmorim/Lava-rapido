@@ -1,7 +1,8 @@
 console.log("Processo principal")
 
 //Importação do modelo de dados do cliente
-const clienteModel = require("./src/models/os.js")
+// const clienteModel = require("./src/models/os.js")
+
 // Importações =========================================================================================
 
 const { app, BrowserWindow, nativeTheme, Menu, ipcMain, dialog, shell } = require('electron')
@@ -613,6 +614,16 @@ ipcMain.on('new-funcionario', async (event, funcionario) => {
 
 // Crud Read ===========================================================================
 
+// Validação de busca (preenchimento obrigatório)
+ipcMain.on('validate-search', () => {
+    dialog.showMessageBox({
+        type: 'warning',
+        title: "Atenção!",
+        message: "Preencha o campo de busca",
+        buttons: ['OK']
+    })
+})
+
 ipcMain.on('search-name', async (event, name) => {
     //console.log("teste IPC search-name") ( *Dica para testar sempre passo a passo* usar o console.log primeiro e depois ir pro proximo passo)
 
@@ -626,11 +637,34 @@ ipcMain.on('search-name', async (event, name) => {
         //console.log(dataClient)
         const dataClient = await clientModel.find({
             $or: [
-                { nomeClient: new RegExp(name, 'i') },
+                { nomeCliente: new RegExp(name, 'i') },
                 { cpfCliente: new RegExp(name, 'i') }
             ]
         })
         console.log(dataClient) // Teste passos 3 e 4 (importante!) 
+
+
+        // Melhoria da expêriencia do usuario (se o cliente não estiver cadastrado, alertar o usúario e questionar se ele quer cadastrar este novo cliente. Se não quiser cadastrar, limpar os campos, se quiser cadastrar recortar o nome do cliente do campo de busca e cloar no campo nome)
+
+        // Se o vetor estiver vazio [] (cliente não cadastrado)
+        if (dataClient.length === 0) {
+            dialog.showMessageBox({
+                type: 'warning',
+                title: "Aviso",
+                message: "Cliente não cadastrado.\n Deseja cadastrar este cliente?",
+                defaultId: 0,
+                buttons: ['Sim', 'Não'] // [0,1]
+            }).then((result) => {
+                if (result.response === 0) {
+                    // Enviar ao renderizador um pedido para setar od campod (recortar do campo de busca e colar no campo nome)
+                    event.reply('set-client')
+                } else {
+                    // Limpar o formulário
+                    event.reply('reset-form')
+                }
+            })
+        }
+
         // Passo 5: 
         // Enviando os dados do cliente ao rendererCliente
         // OBS: IPC so trabalha com string, então é necessario converter o JSON para JSON.stringify(dataClient)
@@ -642,3 +676,4 @@ ipcMain.on('search-name', async (event, name) => {
 })
 
 // Fim - Crud Read ======================================================================
+

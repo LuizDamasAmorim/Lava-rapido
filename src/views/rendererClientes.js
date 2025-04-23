@@ -3,7 +3,7 @@ function buscarCEP() {
     //console.log("teste do evento blur")
 
     // Pegando a tag pelo input e colocando o valor dentro de "cep" 
-    let cep = document.getElementById('inputCEPClient').value 
+    let cep = document.getElementById('inputCEPClient').value
     console.log(cep)
 
     //console.log(cep) //teste de recebimento do CEP 
@@ -35,11 +35,33 @@ const foco = document.getElementById('searchClient')
 // Iniciar a janela de clientes alterando as propiedades de alguns elementos
 document.addEventListener('DOMContentLoaded', () => {
     // Desativar os botões 
-    btnUpdate.disabled = true 
+    btnUpdate.disabled = true
     btnDelete.disabled = true
     // Foco na busca do cliente 
     foco.focus()
 })
+
+// Manipulação da tecla Enter ======================================================
+
+// Função para manipular o evento da tecla Enter 
+function teclaEnter(event) {
+    // Se a tecla Enter for pressionada
+    if (event.key === "Enter") {
+        event.preventDefault() // Ignorar o comportamento padrão 
+        // Associar o Enter a busca pelo cliente
+        buscarCliente()
+    }
+}
+
+// funão para restaurar o padrão da tecla Enter (submit)
+function restaurarEnter() {
+    frmClient.removeEventListener('keydown', teclaEnter)
+}
+
+// "Escuta do evento Tecla Enter"
+frmClient.addEventListener('keydown', teclaEnter)
+
+// Fim - Manipulação da tecla Enter ================================================
 
 // Captura dos dados dos inputs do formulário (Passo 1: Fluxo)
 let frmClient = document.getElementById('frmClient')
@@ -68,11 +90,11 @@ frmClient.addEventListener('submit', async (event) => {
     console.log(nameClient.value, cpfClient.value, emailClient.value, phoneClient.value, cepClient.value, addressClient.value, numberClient.value, complementClient.value, neighborhoodClient.value, cityClient.value, ufClient.value)
     // Criarum objeto para armazenar os dados do cliente antes de enviar ao main 
 
-     // Limpa o CPF antes de salvar no banco
-     let cpfSemFormatacao = cpfClient.value.replace(/\D/g, "");
+    // Limpa o CPF antes de salvar no banco
+    let cpfSemFormatacao = cpfClient.value.replace(/\D/g, "");
 
 
-    
+
     const client = {
         nameCli: nameClient.value,
         cpfCli: cpfSemFormatacao,
@@ -88,7 +110,7 @@ frmClient.addEventListener('submit', async (event) => {
     }
     // Enviar ao main o objeto client - (Passo 2: fluxo)
     // Uso do preload.js
-    api.newClient(client) 
+    api.newClient(client)
 })
 // == Fim CRUD Create/Update ===================================================
 // =============================================================================
@@ -98,39 +120,63 @@ frmClient.addEventListener('submit', async (event) => {
 // == CRUD Read ================================================================
 // =============================================================================
 
-function buscarCliente(){
+function buscarCliente() {
     // Passo 1: capturar o nome do cliente
     let name = document.getElementById('searchClient').value
 
     console.log(name) // Teste do passo 1
-    api.searchName(name) // Passo 2: envio do nome ao main
 
-    // Recebimento dos dados do cliente 
-    api.renderClient((event, dataClient) => {
-        console.log(dataClient) // Teste do passo 5
-        // Passo 6: renderizar os dados do cliente no formulário
-        // - Criar um vetor global para manipulação dos dados
-        // - Criar uma constante para converter os dados recebidos que estão no formato string para o formato JASON (JASON.parse)
-        // Usar o laço forEatch para percorrer o vetor e setar os campos (caixas de texto do formulário)
-        const dadosCliente = JSON.parse(dataClient)
-        // atribuir ao vetor os dados do cliente 
-        arrayClient = dadosCliente
-        // extrair os dados do cliente
-        arrayClient.forEach((c)=>{
-            nameClient.value = c.nomeCliente,
-            cpfClient.value = c.cpfCliente,
-            emailClient.value = c.emailCliente,
-            phoneClient.value = c.foneCliente,
-            cepClient.value = c.cepCliente,
-            addressClient.value = c.logradouroCliente,
-            numberClient.value = c.numeroCliente,
-            complementClient.value = c.complementoCliente,
-            neighborhoodClient.value = c.bairroCliente,
-            cityClient.value = c.cidadeCliente,
-            ufClient.value = c.ufCliente
+    // Validação de campo obrigatório
+    // Se o campo da busca não for preenchido 
+    if (name === "") {
+        // enviar ao main um pedido para alertar para o usuario
+        api.validateSearch()
+        foco.focus()
+    } else {
+        api.searchName(name) // Passo 2: envio do nome ao main
+
+        // Recebimento dos dados do cliente 
+        api.renderClient((event, dataClient) => {
+            console.log(dataClient) // Teste do passo 5
+            // Passo 6: renderizar os dados do cliente no formulário
+            // - Criar um vetor global para manipulação dos dados
+            // - Criar uma constante para converter os dados recebidos que estão no formato string para o formato JASON (JASON.parse)
+            // Usar o laço forEatch para percorrer o vetor e setar os campos (caixas de texto do formulário)
+            const dadosCliente = JSON.parse(dataClient)
+            // atribuir ao vetor os dados do cliente 
+            arrayClient = dadosCliente
+            // extrair os dados do cliente
+            arrayClient.forEach((c) => {
+                nameClient.value = c.nomeCliente,
+                    cpfClient.value = c.cpfCliente,
+                    emailClient.value = c.emailCliente,
+                    phoneClient.value = c.foneCliente,
+                    cepClient.value = c.cepCliente,
+                    addressClient.value = c.logradouroCliente,
+                    numberClient.value = c.numeroCliente,
+                    complementClient.value = c.complementoCliente,
+                    neighborhoodClient.value = c.bairroCliente,
+                    cityClient.value = c.cidadeCliente,
+                    ufClient.value = c.ufCliente
+            })
         })
-    })
+    }
 }
+
+// setar o cliente não cadastrar (recortar do campo de busca de colar no campo nome)
+api.setClient((args) => {
+    // Criar uma variável para armazenar o valor digitado no campo de busca (nome ou cpf)
+    let campoBusca = document.getElementById('searchClient').value
+
+    // Foco no canto de nome do cliente
+    nameClient.focus()
+
+    // Remover o valor digitado no campo de busca
+    foco.value = ""
+
+    // preencher o campo de nome do cliente com o nome da busca
+    nameClient.value = campoBusca
+})
 
 // == Fim CRUD Read ============================================================
 // =============================================================================
@@ -139,13 +185,13 @@ function buscarCliente(){
 
 // =============================================================================
 // == Reset Form ===============================================================
-function resetForm () {
+function resetForm() {
     // Limpar os campos e resetar o formulário com as configurações pré definidas
     location.reload() //Recarrega as configyrções predefinidas
 }
 
 // Recebimento do pedido do main para resetar o formuário
-api.resetForm((args) =>{
+api.resetForm((args) => {
     resetForm()
 })
 
