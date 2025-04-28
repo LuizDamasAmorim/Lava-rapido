@@ -55,6 +55,9 @@ let complementClient = document.getElementById('inputComplementClient')
 let neighborhoodClient = document.getElementById('inputneighborhoodClient')
 let cityClient = document.getElementById('inputCityClient')
 let ufClient = document.getElementById('inputUFClient')
+
+// Captura do Id do cliente (usado no delete e update)
+let id = document.getElementById('idClient')
 // =============================================================================
 
 
@@ -152,6 +155,7 @@ function buscarCliente() {
             arrayClient = dadosCliente
             // extrair os dados do cliente
             arrayClient.forEach((c) => {
+                id.value = c._id, 
                 nameClient.value = c.nomeCliente,
                     cpfClient.value = c.cpfCliente,
                     emailClient.value = c.emailCliente,
@@ -163,10 +167,20 @@ function buscarCliente() {
                     neighborhoodClient.value = c.bairroCliente,
                     cityClient.value = c.cidadeCliente,
                     ufClient.value = c.ufCliente
+// ------------------------------------------------------------------------------------------------
+// Aqui, apartir do momento em que você pesquisa um usuario presente no seu banco de dados, ele desabilita o botão de adicionar, e habilita os de editar e excluir: 
+
+                    // Bloqueio do botão adicionar 
+                    btnCreate.disabled = true // Pegar o identificador do botão no html e desabilitar ele com o .disabled = true
+
+                    // Desbloqueio dos botões editar e excluir
+                    btnUpdate.disabled = false  // Estavam desativados antes, ativei eles a partir daqui
+                    btnDelete.disabled = false
             })
         })
     }
 }
+// ------------------------------------------------------------------------------------------------
 
 // Setar o cliente não cadastrado
 api.setClient((args) => {
@@ -272,3 +286,17 @@ cpfClient.addEventListener("blur", validarCPF); // Validação ao perder o foco
 
 
 // ====================================================================================================
+
+
+
+
+// == CRUD Delete ==============================================================
+// =============================================================================
+
+function excluirCliente() {
+    console.log(id.value) // Passo 1 (receber do form o id)
+    api.deleteClient(id.value) // Passo 2 (enviar o id ao main)
+}
+
+// == Fim do CRUD Delete =======================================================
+// =============================================================================

@@ -677,3 +677,32 @@ ipcMain.on('search-name', async (event, name) => {
 
 // Fim - Crud Read ======================================================================
 
+
+
+// == CRUD Delete =======================================================================
+
+ipcMain.on('delete-client', async (event, id) => {
+    console.log(id) //Teste do passo 2 (recebimento do id)
+
+    try {
+        // Importante - confirmar a exclusão
+        // Client é o nome da variável que representa a janela
+        const {response} = await dialog.showMessageBox(cadclientes, {
+            type: 'warning',
+            title: "Atenção",
+            message: "Deseja excluir este cliente?\nEsta ação não podera ser desfeita.",
+            buttons: ['Cancelar','Excluir'] //[0, 1]
+        })
+        if (response === 1) {
+            // Passo 3 - Excluir o registro do cliente
+            const delClient = await clientModel.findByIdAndDelete(id)
+            event.reply('reset-form')
+        }
+    } catch (error) {
+        console.log(error)
+    }
+})
+
+// == Fim do CRUD Delete ================================================================
+
+
