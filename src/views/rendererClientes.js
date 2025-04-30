@@ -95,30 +95,52 @@ frmClient.addEventListener('submit', async (event) => {
     // Evitar o comportamento padrão do submit, que é enviar os dados do formulário e reiniciar o documento html
     event.preventDefault()
     // Teste importante (recebimento dos dados do formulário - passo 1 do fluxo)
-    console.log(nameClient.value, cpfClient.value, emailClient.value, phoneClient.value, cepClient.value, addressClient.value, numberClient.value, complementClient.value, neighborhoodClient.value, cityClient.value, ufClient.value)
-    // Criarum objeto para armazenar os dados do cliente antes de enviar ao main 
-
+    console.log(nameClient.value, cpfClient.value, emailClient.value, phoneClient.value, cepClient.value, addressClient.value, numberClient.value, complementClient.value, neighborhoodClient.value, cityClient.value, ufClient.value, id.value)
+    
     // Limpa o CPF antes de salvar no banco
     let cpfSemFormatacao = cpfClient.value.replace(/\D/g, "");
 
+    // Estratégia usada para utlizar o submit para criar um novo cliente ou alterar os dados do cliente, se existir id significa que existe um cliente se não significa que é para adicionar um novo cliente 
+    if (id.value === "") {
+        // Executar o método para cadastrar um novo cliente
+        // Criarum objeto para armazenar os dados do cliente antes de enviar ao main 
 
-
-    const client = {
-        nameCli: nameClient.value,
-        cpfCli: cpfSemFormatacao,
-        emailCli: emailClient.value,
-        phoneCli: phoneClient.value,
-        cepCli: cepClient.value,
-        addressCli: addressClient.value,
-        numberCli: numberClient.value,
-        complementCli: complementClient.value,
-        neighborhoodCli: neighborhoodClient.value,
-        cityCli: cityClient.value,
-        ufCli: ufClient.value
+        const client = {
+            nameCli: nameClient.value,
+            cpfCli: cpfSemFormatacao,
+            emailCli: emailClient.value,
+            phoneCli: phoneClient.value,
+            cepCli: cepClient.value,
+            addressCli: addressClient.value,
+            numberCli: numberClient.value,
+            complementCli: complementClient.value,
+            neighborhoodCli: neighborhoodClient.value,
+            cityCli: cityClient.value,
+            ufCli: ufClient.value
+        }
+        // Enviar ao main o objeto client - (Passo 2: fluxo)
+        // Uso do preload.js
+        api.newClient(client)
+    } else {
+        // Executar o método para alterar os dados do cliente
+        const client = {
+            idCli: id.value,
+            nameCli: nameClient.value,
+            cpfCli: cpfSemFormatacao,
+            emailCli: emailClient.value,
+            phoneCli: phoneClient.value,
+            cepCli: cepClient.value,
+            addressCli: addressClient.value,
+            numberCli: numberClient.value,
+            complementCli: complementClient.value,
+            neighborhoodCli: neighborhoodClient.value,
+            cityCli: cityClient.value,
+            ufCli: ufClient.value
+        }
+        // Enviar ao main o objeto client - (Passo 2: fluxo)
+        // Uso do preload.js
+        api.updateClient(client)
     }
-    // Enviar ao main o objeto client - (Passo 2: fluxo)
-    // Uso do preload.js
-    api.newClient(client)
 })
 // == Fim CRUD Create/Update ===================================================
 // =============================================================================
@@ -155,8 +177,8 @@ function buscarCliente() {
             arrayClient = dadosCliente
             // extrair os dados do cliente
             arrayClient.forEach((c) => {
-                id.value = c._id, 
-                nameClient.value = c.nomeCliente,
+                id.value = c._id,
+                    nameClient.value = c.nomeCliente,
                     cpfClient.value = c.cpfCliente,
                     emailClient.value = c.emailCliente,
                     phoneClient.value = c.foneCliente,
@@ -167,15 +189,15 @@ function buscarCliente() {
                     neighborhoodClient.value = c.bairroCliente,
                     cityClient.value = c.cidadeCliente,
                     ufClient.value = c.ufCliente
-// ------------------------------------------------------------------------------------------------
-// Aqui, apartir do momento em que você pesquisa um usuario presente no seu banco de dados, ele desabilita o botão de adicionar, e habilita os de editar e excluir: 
+                // ------------------------------------------------------------------------------------------------
+                // Aqui, apartir do momento em que você pesquisa um usuario presente no seu banco de dados, ele desabilita o botão de adicionar, e habilita os de editar e excluir: 
 
-                    // Bloqueio do botão adicionar 
-                    btnCreate.disabled = true // Pegar o identificador do botão no html e desabilitar ele com o .disabled = true
+                // Bloqueio do botão adicionar 
+                btnCreate.disabled = true // Pegar o identificador do botão no html e desabilitar ele com o .disabled = true
 
-                    // Desbloqueio dos botões editar e excluir
-                    btnUpdate.disabled = false  // Estavam desativados antes, ativei eles a partir daqui
-                    btnDelete.disabled = false
+                // Desbloqueio dos botões editar e excluir
+                btnUpdate.disabled = false  // Estavam desativados antes, ativei eles a partir daqui
+                btnDelete.disabled = false
             })
         })
     }

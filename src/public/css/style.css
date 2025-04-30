@@ -51,6 +51,13 @@
     display: none;
 }
 
+
+/* Botão de imprimir recibo (na tela de Ordem de Serviço) */
+#btnRecibo {
+    margin-left: 35px;
+}
+
+
 /* Rodapé */
 footer {
     width: 100%;
@@ -69,4 +76,5 @@ footer p{
     margin-top: 15px;
     text-transform: uppercase;
 }
+/* Fim - Rodapé */
 

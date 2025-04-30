@@ -509,7 +509,7 @@ ipcMain.on('new-os', async (event, os) => {
         const newOs = new osModel({
             placaOs: os.placaOrderservice,
             prazodeFim: os.prazoOrderservice,
-            funResponsavel: os.funResponsavel,
+            funResponsavel: os.FuncOrderservice,
             TipoDeLavagem: os.statusOsTipoLavagem,
             valor: os.valorOrderservice
         })
@@ -527,6 +527,19 @@ ipcMain.on('new-os', async (event, os) => {
 
         })
     } catch (error) {
+        //  Se o código de erro for 11000 (Placa duplicada) enviar uma mensagem ao usuario 
+        if (error.code === 11000) {
+            dialog.showMessageBox({
+                type: 'error',
+                title: "Atenção!",
+                message: "Placa ja está cadastrada\nVerifique se digitou corretamente",
+                buttons: ['OK']
+            }).then((result) => {
+                if (result.response === 0) {
+                    // 
+                }
+            })
+        }
         console.log(error)
     }
 })
@@ -687,11 +700,11 @@ ipcMain.on('delete-client', async (event, id) => {
     try {
         // Importante - confirmar a exclusão
         // Client é o nome da variável que representa a janela
-        const {response} = await dialog.showMessageBox(cadclientes, {
+        const { response } = await dialog.showMessageBox(cadclientes, {
             type: 'warning',
             title: "Atenção",
             message: "Deseja excluir este cliente?\nEsta ação não podera ser desfeita.",
-            buttons: ['Cancelar','Excluir'] //[0, 1]
+            buttons: ['Cancelar', 'Excluir'] //[0, 1]
         })
         if (response === 1) {
             // Passo 3 - Excluir o registro do cliente
@@ -704,5 +717,55 @@ ipcMain.on('delete-client', async (event, id) => {
 })
 
 // == Fim do CRUD Delete ================================================================
+
+
+
+// == CRUD Update =======================================================================
+
+ipcMain.on('update-client', async (event, client) => {
+    console.log(client) //teste importante (recebimento dos dados do cliente)
+    try {
+        // Criar uma nova estrutura de dados usando a classe modelo. Atenção! Os atributos precisam ser identicos ao mdelo de dados Clientes.js e os valores são definidos pelo conteúdo do objeto client
+        const updateClient = await clientModel.findByIdAndUpdate(
+            client.idCli,
+            {
+                nomeCliente: client.nameCli,
+                cpfCliente: client.cpfCli,
+                emailCliente: client.emailCli,
+                foneCliente: client.phoneCli,
+                cepCliente: client.cepCli,
+                logradouroCliente: client.addressCli,
+                numeroCliente: client.numberCli,
+                complementoCliente: client.complementCli,
+                bairroCliente: client.neighborhoodCli,
+                cidadeCliente: client.cityCli,
+                ufCliente: client.ufCli,
+            },
+            {
+                new: true
+            }
+        )
+        // Mensagem de confirmação 
+        dialog.showMessageBox({
+            // Customização 
+            type: 'info',
+            title: "Aviso",
+            message: "Dados do cliente alterados com sucesso",
+            buttons: ['OK']
+        }).then((result) => {
+            // Ação ao pressionar o botão (result = 0)
+            if (result.response === 0) {
+                // Enviar um pedido para o renderizador limpar os campos e resetar as configurações pré definidas (rotulo 'reset-form' do preload.js)
+                event.reply('reset-form')
+            }
+        })
+    } catch (error) {
+        console.log(error)
+    }
+})
+
+// == Fim do CRUD Update ================================================================
+
+
 
 

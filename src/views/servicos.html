@@ -17,68 +17,26 @@
     <div class="container">
         <form id="frmOS" class="mt-2 row g-3">
 
-            <!-- Marca -->
-            <div class="col-md-3">
-                <label class="form-label">Marca</label>
-                <input type="text" class="form-control" id="txtOs" disabled>
+             <!-- Placa -->
+             <div class="col-md-4">
+                <label for="inputPlacaOS" class="form-label">Placa</label>
+                <input type="text" class="form-control" id="inputPlacaOS" spellcheck="false" maxlength="15">
             </div>
 
-            <!-- Modelo -->
-            <div class="col-md-3">
-                <label class="form-label">Modelo</label>
-                <input type="text" class="form-control" id="txtOs" disabled>
-            </div>
     
-            <!-- Buscar cliente -->
-            <div class="col-md-4" id="buscarclientes">
+            <!-- Buscar Placa -->
+            <div class="col-md-6" id="buscarPlaca">
                 <label for="inputnumeroOS" class="form-label">
-                    Buscar Clientes
+                    Buscar Placa
                 </label>
                 <div class="d-flex">
                     <input type="text" class="form-control" id="searchOS" maxlength="30" spellcheck="false">
                     <button type="button" class="btn btn-primary" id="btnRead" onclick="searchOS()">Buscar</button>
                 </div>
             </div>
-
-            <!-- Data de Entrada -->
-            <div class="col-md-3">
-                <label class="form-label">Data de Entrada</label>
-                <input type="text" class="form-control" id="txtData" disabled>
-            </div>
-
-            <!-- Ano -->
-            <div class="col-md-2">
-                <label for="inputNameClient" class="form-label">Ano</label>
-                <input type="text" class="form-control" id="inputNameClient" spellcheck="false" maxlength="30" disabled>
-            </div>
-
-            <!-- Cor -->
-            <div class="col-md-2">
-                <label for="inputPhoneClient" class="form-label">Cor</label>
-                <input type="text" class="form-control" id="inputPhoneClient" spellcheck="false" maxlength="15"
-                    disabled>
-            </div>
-
-            <!-- Tipo -->
-            <div class="col-md-3">
-                <label for="inputCPFClient" class="form-label">Tipo</label>
-                <input type="text" class="form-control" id="inputCPFClient" spellcheck="false" maxlength="15" disabled>
-            </div>
-
-            <!-- Placa -->
-            <div class="col-md-3">
-                <label for="inputCPFClient" class="form-label">Placa</label>
-                <input type="text" class="form-control" id="inputCPFClient" spellcheck="false" maxlength="15" disabled>
-            </div>
-
+           
             <!-- Linha -->
             <hr class="mt-4 border border-secondary border -1">
-
-            <!-- Placa do veículo  -->
-            <div class="col-md-6">
-                <label for="inputPlacaOS" class="form-label">Placa do Veículo</label>
-                <input type="text" class="form-control" id="inputPlacaOS" spellcheck="false" required maxlength="15">
-            </div>
 
             <!-- Prazo  -->
             <div class="col-md-6">
@@ -119,6 +77,8 @@
                 <button type="button" class="btn btn-danger" id="btnDelete">Excluir</button>
 
                 <button type="reset" class="btn" id="btnReset" onclick="resetForm()"></button>
+
+                <button type="submit" class="btn btn-primary" id="btnRecibo">Imprimir recibo</button>
         </form>
     </div>
 
