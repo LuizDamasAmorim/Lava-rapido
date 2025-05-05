@@ -169,7 +169,7 @@ function servicosWindow() {
     if (main) {
         servicos = new BrowserWindow({
             width: 1010,
-            height: 720,
+            height: 450,
             //autoHideMenuBar: true,
             parent: main,
             modal: true,
@@ -191,7 +191,7 @@ function funcionariosWindow() {
     if (main) {
         funcionarios = new BrowserWindow({
             width: 1010,
-            height: 720,
+            height: 640,
             //autoHideMenuBar: true,
             parent: main,
             modal: true,
@@ -295,6 +295,9 @@ const template = [
             },
             {
                 label: 'Histórico de serviços'
+            },
+            {
+                label: 'Lavagens concluidas'
             },
             {
                 label: 'Total faturado'
@@ -504,11 +507,8 @@ async function relatorioClientes() {
 ipcMain.on('new-os', async (event, os) => {
     console.log(os)
 
-
     try {
         const newOs = new osModel({
-            placaOs: os.placaOrderservice,
-            prazodeFim: os.prazoOrderservice,
             funResponsavel: os.FuncOrderservice,
             TipoDeLavagem: os.statusOsTipoLavagem,
             valor: os.valorOrderservice
@@ -518,7 +518,7 @@ ipcMain.on('new-os', async (event, os) => {
         dialog.showMessageBox({
             type: 'info',
             title: "Aviso",
-            message: "Os adicionada com sucesso",
+            message: "Lavagem adicionada com sucesso",
             buttons: ['OK']
         }).then((result) => {
             if (result.response === 0) {
@@ -527,19 +527,6 @@ ipcMain.on('new-os', async (event, os) => {
 
         })
     } catch (error) {
-        //  Se o código de erro for 11000 (Placa duplicada) enviar uma mensagem ao usuario 
-        if (error.code === 11000) {
-            dialog.showMessageBox({
-                type: 'error',
-                title: "Atenção!",
-                message: "Placa ja está cadastrada\nVerifique se digitou corretamente",
-                buttons: ['OK']
-            }).then((result) => {
-                if (result.response === 0) {
-                    // 
-                }
-            })
-        }
         console.log(error)
     }
 })
@@ -578,6 +565,18 @@ ipcMain.on('new-veiculo', async (event, veiculo) => {
 
         })
     } catch (error) {
+        if (error.code === 11000) {
+            dialog.showMessageBox({
+                type: 'error',
+                title: "Atenção!",
+                message: "Placa ja está cadastrada\nVerifique se digitou corretamente",
+                buttons: ['OK']
+            }).then((result) => {
+                if (result.response === 0) {
+                    // 
+                }
+            })
+        }
         console.log(error)
     }
 })

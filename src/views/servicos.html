@@ -17,15 +17,14 @@
     <div class="container">
         <form id="frmOS" class="mt-2 row g-3">
 
-             <!-- Placa -->
-             <div class="col-md-4">
-                <label for="inputPlacaOS" class="form-label">Placa</label>
-                <input type="text" class="form-control" id="inputPlacaOS" spellcheck="false" maxlength="15">
+            <!-- Recibo -->
+            <div class="col-md-2">
+                <label for="inputReciboOS" class="form-label">Recibo</label>
+                <input type="text" class="form-control" id="inputReciboOS" spellcheck="false" disabled maxlength="30">
             </div>
 
-    
             <!-- Buscar Placa -->
-            <div class="col-md-6" id="buscarPlaca">
+            <div class="col-md-4" id="buscarPlaca">
                 <label for="inputnumeroOS" class="form-label">
                     Buscar Placa
                 </label>
@@ -34,25 +33,32 @@
                     <button type="button" class="btn btn-primary" id="btnRead" onclick="searchOS()">Buscar</button>
                 </div>
             </div>
+
+            <!-- Marca -->
+            <div class="col-md-3">
+                <label for="inputMarcaOS" class="form-label">Marca</label>
+                <input type="text" class="form-control" id="inputMarcaOS" spellcheck="false" disabled maxlength="30">
+            </div>
+
+            <!-- Modelo -->
+            <div class="col-md-3">
+                <label for="inputModeloOS" class="form-label">Modelo</label>
+                <input type="text" class="form-control" id="inputModeloOS" spellcheck="false" disabled maxlength="30">
+            </div>
            
             <!-- Linha -->
             <hr class="mt-4 border border-secondary border -1">
 
-            <!-- Prazo  -->
-            <div class="col-md-6">
-                <label for="inputPrazoOS" class="form-label">Prazo</label>
-                <input type="text" class="form-control" id="inputPrazoOS" spellcheck="false" required maxlength="15">
-            </div>
 
             <!-- Funcionário -->
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <label for="inputFuncionarioOS" class="form-label">Funcionário responsável</label>
                 <input type="text" class="form-control" id="inputFuncionarioOS" spellcheck="false" maxlength="50">
             </div>
 
 
-            <!-- Status -->
-            <div class="col-md-6">
+            <!-- Tipo de lavagem -->
+            <div class="col-md-4">
                 <label class="form-label">Tipo de lavagem</label>
                 <select class="form-select" id="inputOsTipo">
                     <option value=""></option>

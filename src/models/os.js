@@ -8,13 +8,6 @@ const {model, Schema} = require('mongoose')
 
 //Criação da estrutura da coleção OS
 const cadastroOS = new Schema({
-    placaOs: {
-        type: String,
-        unique: true
-    },
-    prazodeFim: {
-        type: String
-    },
     funResponsavel: {
         type: String
     },

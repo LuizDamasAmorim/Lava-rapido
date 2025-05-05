@@ -8,6 +8,10 @@ const { model, Schema } = require('mongoose')
 
 // Criação da estrutura da coleção Clientes
 const veiculoSchema = new Schema({
+    placaVeiculo: {
+        type: String,
+        unique: true
+    },
     marcaVeiculo: {
         type: String
     },
@@ -22,10 +26,8 @@ const veiculoSchema = new Schema({
     },
     tipoVeiculo: {
         type: String
-    },
-    placaVeiculo: {
-        type: String
     }
+    
 }, {versionKey: false}) // Não versionar os dados armazenados
 
 // Exportar para o main o modelo de dados 
