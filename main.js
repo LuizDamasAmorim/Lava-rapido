@@ -33,6 +33,10 @@ const { jspdf, default: jsPDF } = require('jspdf')
 // Importação da biblioteca fs (nativa do JavaScript) para manipulação de arquivos pdf
 const fs = require('fs')
 
+// Importação do recurso 'electron-prompt' (dialog de input)
+// 1° Instalar o recurso: npm i electron-prompt
+const prompt = require('electron-prompt')
+
 // =====================================================================================================
 
 
@@ -531,12 +535,103 @@ ipcMain.on('new-os', async (event, os) => {
     }
 })
 
-// Fim - Crud OS ======================================================================
+// Fim - Crud OS ===================================================================
 
 
 
+// == Relatório das lavagens (OS) ==================================================
 
-// Crud Veículos ======================================================================
+async function relatorioClientes() {
+    try {
+        // Passo 1: Consultar o banco de dados e obter a listagem de clientes cadasrtrados por ordem alfabética
+        const clientes = await clientModel.find().sort({ nomeCliente: 1 })
+        // Teste de recebimento da listagem de clientes
+        // console.log(clientes)
+
+        // Passo 2: Formatação do documento pdf 
+        // p - portrait | l - landscape | mm e a4 (folha)
+        const doc = new jsPDF('p', 'mm', 'a4')
+
+        // Inserir imagens no documento PDF
+        // imagePath (caminho da imagem que será inserida no pfd)
+        const imagePath = path.join(__dirname, 'src', 'public', 'img', 'logotubarao64x64.png')
+
+        // imageBase64 (Uso da biblioteca fs para ler o arquivo no formato png)
+        const imageBase64 = fs.readFileSync(imagePath, { encoding: 'base64' })
+
+        doc.addImage(imageBase64, 'PNG', 170, 15) //(eixo X: 5mm, eixo Y: 8mm)
+
+        // definir o tamanho da fonte (tamanho equivalente ao word)
+        doc.setFontSize(18)
+
+        // Escrevendo um texto (titulo)
+        doc.text("Relatório de clientes", 14, 20)//x, y (mm)  (x é horizontal(margem)) (y é vertical)
+
+        // Inserir a  data atual no relatório 
+        const dataAtual = new Date().toLocaleDateString('pt-BR')
+        doc.setFontSize(12)
+        doc.text(`Data: ${dataAtual}`, 160, 10)   //(x = 160) (y = 10)
+
+        // Variável de apoio na formatação 
+        let y = 45
+        doc.text("Nome", 14, y)
+        doc.text("Telefone", 90, y)
+        doc.text("Email", 130, y)
+        y += 5
+        //  Desenhar a linnha 
+        doc.setLineWidth(0.5) // espessura da linha 
+        doc.line(10, y, 200, y) // 10 (Inicio) ------- 200 (fim)
+
+        // renderizar os clientes cadastrados no banco
+        y += 10 // Espaçamento da linha
+
+        // Percorrer o vetor clientes(obtido no banco) usando o laço forEach (equivale a laço for)
+        clientes.forEach((c) => {
+            // Adicionar outra página se a folha inteira for preenchida (estratégia  é saber o tamanho da folha)
+            //  folha A4 y = 297mm
+            if (y > 280) {
+                doc.addPage()
+                y = 20 // resetar a variável y
+
+                doc.text("Nome", 14, y)
+                doc.text("Telefone", 90, y)
+                doc.text("Email", 130, y)
+                y += 5
+                doc.setLineWidth(0.5)
+                doc.line(10, y, 200, y)
+                y += 10
+            }
+
+            doc.text(c.nomeCliente, 14, y)
+            doc.text(c.foneCliente, 90, y)
+            doc.text(c.emailCliente || "N/A", 130, y)
+            y += 10 // Quebra de linha 
+        })
+
+        const paginas = doc.internal.getNumberOfPages()
+        for (let i = 1; i <= paginas; i++) {
+            doc.setPage(i)
+            doc.setFontSize(10)
+            doc.text(`Pagina ${i} de ${paginas}`, 105, 290, { align: 'center' })
+        }
+
+        // Definir o caminho do arquivo temporário
+        const tempDir = app.getPath('temp')
+        const filePath = path.join(tempDir, 'clientes.pdf')
+        // Salvar temporariamente o arquivo 
+        doc.save(filePath)
+        // Abrir o arquivo no aplicativo padrão de leitura de pdf do computador do usuario
+        shell.openPath(filePath)
+    } catch (error) {
+        console.log(error)
+    }
+
+}
+// === Fim - Relatório das Lavagens (OS) ===========================================
+
+
+
+// Crud Veículos ===================================================================
 
 ipcMain.on('new-veiculo', async (event, veiculo) => {
     console.log(veiculo)
@@ -581,11 +676,11 @@ ipcMain.on('new-veiculo', async (event, veiculo) => {
     }
 })
 
-// Fim - Crud OS ======================================================================
+// Fim - Crud OS ===================================================================
 
 
 
-// Crud Funcionários ==================================================================
+// Crud Funcionários ===============================================================
 
 ipcMain.on('new-funcionario', async (event, funcionario) => {
     console.log(funcionario)
@@ -619,12 +714,12 @@ ipcMain.on('new-funcionario', async (event, funcionario) => {
     }
 })
 
-// Fim - Crud OS ======================================================================
+// Fim - Crud OS ===================================================================
 
 
 
 
-// Crud Read ===========================================================================
+// Crud Read =======================================================================
 
 // Validação de busca (preenchimento obrigatório)
 ipcMain.on('validate-search', () => {
@@ -687,11 +782,11 @@ ipcMain.on('search-name', async (event, name) => {
     }
 })
 
-// Fim - Crud Read ======================================================================
+// Fim - Crud Read ===================================================================
 
 
 
-// == CRUD Delete =======================================================================
+// == CRUD Delete ====================================================================
 
 ipcMain.on('delete-client', async (event, id) => {
     console.log(id) //Teste do passo 2 (recebimento do id)
@@ -715,11 +810,11 @@ ipcMain.on('delete-client', async (event, id) => {
     }
 })
 
-// == Fim do CRUD Delete ================================================================
+// == Fim do CRUD Delete =============================================================
 
 
 
-// == CRUD Update =======================================================================
+// == CRUD Update ====================================================================
 
 ipcMain.on('update-client', async (event, client) => {
     console.log(client) //teste importante (recebimento dos dados do cliente)
@@ -763,8 +858,66 @@ ipcMain.on('update-client', async (event, client) => {
     }
 })
 
-// == Fim do CRUD Update ================================================================
+// == Fim do CRUD Update =============================================================
 
 
 
 
+
+
+
+
+// ================================================================================================*
+// == Ordem de Serviço ============================================================================*
+// ================================================================================================*
+
+// == Buscar OS =========================================================================
+
+ipcMain.on('search-os', (event) => {
+    //console.log("teste: busca OS")
+    prompt({
+        title: 'Buscar OS',
+        label: 'Digite o número da OS:',
+        inputAttrs: {
+            type: 'text'
+        },
+        type: 'input',
+        width: 400,
+        height: 200
+    }).then((result) => {
+        if (result !== null) {
+            console.log(result)
+            //buscar a os no banco pesquisando pelo valor do result (número da OS)
+
+        }
+    })
+})
+
+// == Fim - Buscar OS ====================================================================
+
+
+
+// == Buscar Placa para vincular na OS (estilo Google) ===================================
+
+ipcMain.on('search-clients', async (event) => {
+    try {
+
+        //Buscar os clientes em ordem alfabetica
+        const clients = await clientModel.find().sort({ nomeCliente: 1 })
+        console.log(clients)
+
+        // Passo 3: envio dos clientes para o renderizador. OBS: Não esquecer de converter para String
+        event.reply('list-clients', JSON.stringify(clients))
+        
+    } catch (error) {
+        console.log(error)
+    }
+})
+
+// == Fim - Buscar Placa =================================================================
+
+
+
+// ================================================================================================*
+// == Fim - Ordem de Serviço ======================================================================*
+// ================================================================================================*

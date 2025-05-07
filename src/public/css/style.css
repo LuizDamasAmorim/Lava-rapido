@@ -78,3 +78,9 @@ footer p{
 }
 /* Fim - Rodapé */
 
+
+/* Lista de clientes vinculados a OS */
+#viewListSuggestion {
+    z-index: 2;
+    max-width: 300px;
+}
