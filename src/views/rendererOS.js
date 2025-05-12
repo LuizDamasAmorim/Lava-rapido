@@ -1,6 +1,6 @@
 // ====================== Capturar o foco na busca pelo nome cliente =========================
 // A constante foco obtem o elemento html (input) identificação como 'searchClient'
-const foco = document.getElementById('searchOS')
+const foco = document.getElementById('inputSearchOS')
 
 // Iniciar a janela de clientes alterando as propiedades de alguns elementos
 document.addEventListener('DOMContentLoaded', () => {
@@ -50,66 +50,72 @@ frmOS.addEventListener('submit', async (event) => {
 // == Busca avançada - estilo Google ==========================================================
 
 // capturar os ids referente aos campos do nome 
-const input = document.getElementById('searchOS')
-// capturar o id do ul da lista de sugestoes de clientes
+const input = document.getElementById('inputSearchOS')
+
+// capturar o id do ul da lista de sugestoes de placas
 const suggestionList = document.getElementById('viewListSuggestion')
+
 // capturar os campos que vão ser preenchidos
+let idOS = document.getElementById('IdOS')
+let placaCar = document.getElementById('inputPlacaCar')
 let marcaOS = document.getElementById('inputMarcaOS')
 let ModeloOS = document.getElementById('inputModeloOS')
 
 // vetor usado na manipulação (filtragem) dos dados
-let arrayClients = []
+let arrayPlaca = []
 
 // captura em tempo real do input (digitação de caracteres na caixa de busca)
 input.addEventListener('input', () => {
+
     // Passo 1: capturar o que for digitado na caixa de busca e converter tudo para letras minusculas (auxilio ao filtro)
     const search = input.value.toLowerCase()
-    ///console.log(search) // teste de apoio a logica 
+    //console.log(search) // teste de apoio a logica 
 
     // passo 2: enviar ao main um pedido de busca de clientes pelo nome (via preload - api (IPC))
-    api.searchClients()
+    api.searchCar()
 
     // Recebimentos dos clientes do banco de dados (passo 3)
-    api.listClients((event, clients) => {
-        ///console.log(clients) // teste do passo 3
+    api.listVeiculos((event, cars) => {
+        console.log(cars) // teste do passo 3 
         // converter o vetor para JSON os dados dos clientes recebidos
-        const dataClients = JSON.parse(clients)
+        const dataCars = JSON.parse(cars)
         // armazenar no vetor os dados dos clientes
-        arrayClients = dataClients
+        arrayPlaca = dataCars
+
         // Passo 4: Filtrar todos os dados dos clientes extraindo nomes que tenham relação com os caracteres digitados na busca em tempo real 
-        const results = arrayClients.filter(c =>
-            c.nomeCliente && c.nomeCliente.toLowerCase().includes(search)
+        const results = arrayPlaca.filter(p =>
+            p.placaCar && p.placaCar.toLowerCase().includes(search)
         ).slice(0, 10) // maximo 10 resultados
-        ///console.log(results) // IMPORTANTE para o entendimento
+        console.log(results) // IMPORTANTE para o entendimento
         // Limpar a lista a cada caractere digitado
         suggestionList.innerHTML = ""
         // Para cada resultado gerar um item da lista <li>
-        results.forEach(c => {
+        results.forEach(p => {
             // criar o elemento li
             const item = document.createElement('li')
+
             // Adicionar classes bootstrap a cada li criado 
             item.classList.add('list-group-item', 'list-group-item-action')
-            // exibir nome do cliente
-            item.textContent = c.nomeCliente
+
+            // exibir as placas
+            item.textContent = p.placaCar
 
             // adicionar os lis criados a lista ul
             suggestionList.appendChild(item)
 
             // Adicionar um evento de clique no item da lista para preencher os campos do formulario 
             item.addEventListener('click', () => {
-                idClient.value = c._id
-                marcaOS.value = c.marcaOS
-                ModeloOS.value = c.ModeloOS
+                //idVeiculo.value = c._id
+                marcaOS.value = p.marcaOS
+                ModeloOS.value = p.ModeloOS
 
                 // Limpar o input e recolher a lista 
                 input.value = ""
                 suggestionList.value = ""
             }) 
-
-
         })
-
     })
+        
 })
 
 // Ocultar a lista ao clicar fora

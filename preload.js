@@ -29,8 +29,8 @@ contextBridge.exposeInMainWorld('api', {
     deleteClient: (id) => ipcRenderer.send ('delete-client', id),
     updateClient: (client) => ipcRenderer.send ('update-client', client),
     searchOS: () => ipcRenderer.send('search-os'),
-    searchClients: (clients) => ipcRenderer.send('search-clients', clients),
-    listClients: (clients) => ipcRenderer.on('list-clients', clients)
+    searchCar: (cars) => ipcRenderer.send('search-car', cars),
+    listVeiculos: (cars) => ipcRenderer.on('list-veiculos', cars)
 })
 
 function dbStatus(message) {

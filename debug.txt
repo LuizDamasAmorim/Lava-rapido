@@ -1,3 +1,8 @@
 OS
-    Modificar a parte de cima da OS para o que eu coloquei no cad de carros
+    Mudar os dados de clientes para o cad de carros no botão de pesquisar
+    Fazer o recibo em PDF / dar funcionalidade ao botão de imprimir recibo
+    Fazer o CRUD dos botões 
+
+Relatório
+    Fazer um relátorio de todas as lavagens do banco de dados (OS)
     

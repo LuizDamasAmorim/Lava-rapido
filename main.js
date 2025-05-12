@@ -899,15 +899,15 @@ ipcMain.on('search-os', (event) => {
 
 // == Buscar Placa para vincular na OS (estilo Google) ===================================
 
-ipcMain.on('search-clients', async (event) => {
+ipcMain.on('search-car', async (event) => {
     try {
 
-        //Buscar os clientes em ordem alfabetica
-        const clients = await clientModel.find().sort({ nomeCliente: 1 })
-        console.log(clients)
+        //Buscar as placas em ordem alfabetica
+        const cars = await veiculoModel.find().sort({ placaVeiculo: 1 })
+        console.log(cars)
 
-        // Passo 3: envio dos clientes para o renderizador. OBS: Não esquecer de converter para String
-        event.reply('list-clients', JSON.stringify(clients))
+        // Passo 3: envio das placas para o renderizador. OBS: Não esquecer de converter para String
+        event.reply('list-veiculos', JSON.stringify(cars))
         
     } catch (error) {
         console.log(error)

@@ -46,8 +46,14 @@
     cursor: none;
 }
 
+
 /* ocultar o campo id do cliente (na página cliente do sistema) */
 #idClient {
+    display: none;
+}
+
+/* ocultar o campo id da OS (na página OS do sistema) */
+#idOS {
     display: none;
 }
 
