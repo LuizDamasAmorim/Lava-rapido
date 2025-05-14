@@ -18,13 +18,19 @@
         <form id="frmOS" class="mt-2 row g-3">
 
             <!-- Recibo -->
-            <div class="col-md-2">
+            <div class="col-md-3">
                 <label for="inputReciboOS" class="form-label">Recibo</label>
                 <input type="text" class="form-control" id="inputReciboOS" spellcheck="false" disabled maxlength="30">
             </div>
 
+            <!-- Data -->
+            <div class="col-md-3">
+                <label class="form-label">Data de entrada</label>
+                <input type="text" class="form-control" id="inputData" disabled>
+            </div>
+
             <!-- Buscar Placa -->
-            <div class="col-md-4" id="buscarPlaca">
+            <div class="col-md-6" id="buscarPlaca">
                 <label for="inputnumeroOS" class="form-label">
                     Buscar Placa
                 </label>
@@ -35,7 +41,7 @@
                 <!-- Lista de sugestões - estilo Google -->
                  <ul id="viewListSuggestion" class="list-group position-absolute w-100"></ul>
             </div>
-
+            
             <!-- Marca -->
             <div class="col-md-3">
                 <label for="inputMarcaOS" class="form-label">Marca</label>
@@ -46,6 +52,12 @@
             <div class="col-md-3">
                 <label for="inputModeloOS" class="form-label">Modelo</label>
                 <input type="text" class="form-control" id="inputModeloOS" spellcheck="false" disabled maxlength="30">
+            </div>
+
+            <!-- Placa  -->
+            <div class="col-md-3">
+                <label for="inputPlacaOS" class="form-label">Placa</label>
+                <input type="text" class="form-control" id="inputPlacaOS" spellcheck="false" disabled maxlength="8">
             </div>
            
             <!-- Linha -->
@@ -77,7 +89,7 @@
             <!-- Valor  -->
             <div class="col-md-3">
                 <label for="inputValorOS" class="form-label">Valor</label>
-                <input type="text" class="form-control" id="inputValorOS" spellcheck="false" required maxlength="15">
+                <input type="text" class="form-control" id="inputValorOS" spellcheck="false" maxlength="15">
             </div>
         
             <!-- Botões  -->

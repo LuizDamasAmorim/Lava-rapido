@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Captura dos dados dos inputs do formulário (Passo 1: Fluxo) ===============================
 let frmOS = document.getElementById('frmOS')
+let PlacaVeiculoOS = document.getElementById('inputPlacaOS')
 let FuncionarioOS = document.getElementById('inputFuncionarioOS')
 let OsTipo = document.getElementById('inputOsTipo')
 let ValorOS = document.getElementById('inputValorOS')
@@ -30,10 +31,11 @@ frmOS.addEventListener('submit', async (event) => {
     // Evitar o comportamento padrão do submit, que é enviar os dados do formulário e reiniciar o documento html
     event.preventDefault()
     // Teste importante (recebimento dos dados do formulário - passo 1 do fluxo)
-    console.log(FuncionarioOS.value, OsTipo.value, ValorOS.value)
+    console.log(PlacaVeiculoOS.value, FuncionarioOS.value, OsTipo.value, ValorOS.value)
 
     // Criarum objeto para armazenar os dados do cliente antes de enviar ao main 
     const os = {
+        PlacaVeiculoOS: PlacaVeiculoOS.value,
         FuncOrderservice: FuncionarioOS.value,
         statusOsTipoLavagem: OsTipo.value,
         valorOrderservice: ValorOS.value,
@@ -57,9 +59,12 @@ const suggestionList = document.getElementById('viewListSuggestion')
 
 // capturar os campos que vão ser preenchidos
 let idOS = document.getElementById('IdOS')
+let dateOS = document.getElementById('inputData')
 let placaCar = document.getElementById('inputPlacaCar')
 let marcaOS = document.getElementById('inputMarcaOS')
 let ModeloOS = document.getElementById('inputModeloOS')
+let PlacaOS = document.getElementById('inputPlacaOS')
+
 
 // vetor usado na manipulação (filtragem) dos dados
 let arrayPlaca = []
@@ -76,21 +81,21 @@ input.addEventListener('input', () => {
 
     // Recebimentos dos clientes do banco de dados (passo 3)
     api.listVeiculos((event, cars) => {
-        console.log(cars) // teste do passo 3 
+        //console.log(cars) // teste do passo 3 
         // converter o vetor para JSON os dados dos clientes recebidos
         const dataCars = JSON.parse(cars)
         // armazenar no vetor os dados dos clientes
         arrayPlaca = dataCars
 
         // Passo 4: Filtrar todos os dados dos clientes extraindo nomes que tenham relação com os caracteres digitados na busca em tempo real 
-        const results = arrayPlaca.filter(p =>
-            p.placaCar && p.placaCar.toLowerCase().includes(search)
+        const results = arrayPlaca.filter(c =>
+            c.placaVeiculo && c.placaVeiculo.toLowerCase().includes(search)
         ).slice(0, 10) // maximo 10 resultados
         console.log(results) // IMPORTANTE para o entendimento
         // Limpar a lista a cada caractere digitado
         suggestionList.innerHTML = ""
         // Para cada resultado gerar um item da lista <li>
-        results.forEach(p => {
+        results.forEach(c => {
             // criar o elemento li
             const item = document.createElement('li')
 
@@ -98,7 +103,7 @@ input.addEventListener('input', () => {
             item.classList.add('list-group-item', 'list-group-item-action')
 
             // exibir as placas
-            item.textContent = p.placaCar
+            item.textContent = c.placaVeiculo
 
             // adicionar os lis criados a lista ul
             suggestionList.appendChild(item)
@@ -106,8 +111,9 @@ input.addEventListener('input', () => {
             // Adicionar um evento de clique no item da lista para preencher os campos do formulario 
             item.addEventListener('click', () => {
                 //idVeiculo.value = c._id
-                marcaOS.value = p.marcaOS
-                ModeloOS.value = p.ModeloOS
+                marcaOS.value = c.marcaVeiculo
+                ModeloOS.value = c.modeloVeiculo
+                PlacaOS.value = c.placaVeiculo
 
                 // Limpar o input e recolher a lista 
                 input.value = ""
@@ -135,6 +141,28 @@ function inputOs() {
     //console.log("teste do botão Buscar OS")
     api.searchOS()
 }
+
+api.renderOS((event, dataOS) => {
+    console.log(dataOS)
+    const os = JSON.parse(dataOS)
+    // preencher os campos com os dados da OS
+    idOS.value = os._id
+    // formatar data:
+    const data = new Date(os.dataEntrada)
+    const formatada = data.toLocaleString("pt-BR", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit"
+    })
+    dataOS.value = formatada
+    PlacaVeiculoOS.value = os.PlacaVeiculoOS
+    FuncionarioOS.value = os.FuncOrderservice
+    OsTipo.value = os.statusOsTipoLavagem
+    ValorOS.value = os.valorOrderservice
+})
 
 // == Fim - Buscar OS =========================================================================
 

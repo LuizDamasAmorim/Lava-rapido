@@ -1,5 +1,5 @@
 OS
-    Mudar os dados de clientes para o cad de carros no botão de pesquisar
+    Mudar os dados de clientes para o cad de carros no botão de pesquisar (FEITO)
     Fazer o recibo em PDF / dar funcionalidade ao botão de imprimir recibo
     Fazer o CRUD dos botões 
 

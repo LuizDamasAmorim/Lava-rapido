@@ -173,7 +173,7 @@ function servicosWindow() {
     if (main) {
         servicos = new BrowserWindow({
             width: 1010,
-            height: 450,
+            height: 550,
             //autoHideMenuBar: true,
             parent: main,
             modal: true,
@@ -513,6 +513,7 @@ ipcMain.on('new-os', async (event, os) => {
 
     try {
         const newOs = new osModel({
+            PlacaVeiculoOS: os.PlacaVeiculoOS,
             funResponsavel: os.FuncOrderservice,
             TipoDeLavagem: os.statusOsTipoLavagem,
             valor: os.valorOrderservice
