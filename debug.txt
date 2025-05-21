@@ -1,8 +1,5 @@
 OS
-    Mudar os dados de clientes para o cad de carros no botão de pesquisar (FEITO)
-    Fazer o recibo em PDF / dar funcionalidade ao botão de imprimir recibo
-    Fazer o CRUD dos botões 
+    Fazer o CRUD dos botões
+    Fazer a atualização da Os
 
-Relatório
-    Fazer um relátorio de todas as lavagens do banco de dados (OS)
-    
+    Dar funcionalidade ao botão de imprimir recibo

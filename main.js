@@ -37,6 +37,10 @@ const fs = require('fs')
 // 1° Instalar o recurso: npm i electron-prompt
 const prompt = require('electron-prompt')
 
+// Importação do Mongoose
+const mongoose = require('mongoose')
+const os = require('./src/models/os.js')
+
 // =====================================================================================================
 
 
@@ -278,7 +282,7 @@ const template = [
             },
             {
                 label: 'Cadastro de veículos',
-                click: () => vadcarrosiosWindow()
+                click: () => cadcarrosWindow()
             },
             {
                 type: 'separator'
@@ -298,13 +302,8 @@ const template = [
                 click: () => relatorioClientes()
             },
             {
-                label: 'Histórico de serviços'
-            },
-            {
-                label: 'Lavagens concluidas'
-            },
-            {
-                label: 'Total faturado'
+                label: 'Lavagens concluidas',
+                click: () => relatorioLavagem()
             }
         ]
     },
@@ -516,7 +515,9 @@ ipcMain.on('new-os', async (event, os) => {
             PlacaVeiculoOS: os.PlacaVeiculoOS,
             funResponsavel: os.FuncOrderservice,
             TipoDeLavagem: os.statusOsTipoLavagem,
-            valor: os.valorOrderservice
+            valor: os.valorOrderservice,
+            marcaOs: os.marcaOs,
+            modeloOs: os.modeloOs
         })
         await newOs.save()
 
@@ -542,71 +543,57 @@ ipcMain.on('new-os', async (event, os) => {
 
 // == Relatório das lavagens (OS) ==================================================
 
-async function relatorioClientes() {
+async function relatorioLavagem() {
     try {
-        // Passo 1: Consultar o banco de dados e obter a listagem de clientes cadasrtrados por ordem alfabética
-        const clientes = await clientModel.find().sort({ nomeCliente: 1 })
-        // Teste de recebimento da listagem de clientes
-        // console.log(clientes)
+        const fun = await osModel.find().sort({ funResponsavel: 1 })
 
-        // Passo 2: Formatação do documento pdf 
-        // p - portrait | l - landscape | mm e a4 (folha)
         const doc = new jsPDF('p', 'mm', 'a4')
 
-        // Inserir imagens no documento PDF
-        // imagePath (caminho da imagem que será inserida no pfd)
         const imagePath = path.join(__dirname, 'src', 'public', 'img', 'logotubarao64x64.png')
 
-        // imageBase64 (Uso da biblioteca fs para ler o arquivo no formato png)
         const imageBase64 = fs.readFileSync(imagePath, { encoding: 'base64' })
 
         doc.addImage(imageBase64, 'PNG', 170, 15) //(eixo X: 5mm, eixo Y: 8mm)
 
-        // definir o tamanho da fonte (tamanho equivalente ao word)
         doc.setFontSize(18)
 
-        // Escrevendo um texto (titulo)
-        doc.text("Relatório de clientes", 14, 20)//x, y (mm)  (x é horizontal(margem)) (y é vertical)
+        doc.text("Relatório de lavagens", 14, 20)//x, y (mm)  (x é horizontal(margem)) (y é vertical)
 
-        // Inserir a  data atual no relatório 
         const dataAtual = new Date().toLocaleDateString('pt-BR')
         doc.setFontSize(12)
         doc.text(`Data: ${dataAtual}`, 160, 10)   //(x = 160) (y = 10)
 
-        // Variável de apoio na formatação 
         let y = 45
-        doc.text("Nome", 14, y)
-        doc.text("Telefone", 90, y)
-        doc.text("Email", 130, y)
+        doc.text("Funcionário", 14, y)
+        doc.text("Tipo", 90, y)
+        doc.text("Valor", 130, y)
         y += 5
+
         //  Desenhar a linnha 
         doc.setLineWidth(0.5) // espessura da linha 
         doc.line(10, y, 200, y) // 10 (Inicio) ------- 200 (fim)
 
-        // renderizar os clientes cadastrados no banco
-        y += 10 // Espaçamento da linha
+        y += 10
 
-        // Percorrer o vetor clientes(obtido no banco) usando o laço forEach (equivale a laço for)
-        clientes.forEach((c) => {
-            // Adicionar outra página se a folha inteira for preenchida (estratégia  é saber o tamanho da folha)
-            //  folha A4 y = 297mm
+        fun.forEach((c) => {
             if (y > 280) {
                 doc.addPage()
                 y = 20 // resetar a variável y
 
-                doc.text("Nome", 14, y)
-                doc.text("Telefone", 90, y)
-                doc.text("Email", 130, y)
+                doc.text("Funcionário", 14, y)
+                doc.text("Tipo", 90, y)
+                doc.text("Valor", 130, y)
                 y += 5
                 doc.setLineWidth(0.5)
                 doc.line(10, y, 200, y)
                 y += 10
             }
 
-            doc.text(c.nomeCliente, 14, y)
-            doc.text(c.foneCliente, 90, y)
-            doc.text(c.emailCliente || "N/A", 130, y)
-            y += 10 // Quebra de linha 
+            doc.text(String(c.funResponsavel), 14, y)
+            doc.text(String(c.TipoDeLavagem), 90, y)
+            doc.text(String(c.valor ?? "N/A"), 130, y)
+
+            y += 10 // Quebra de linha
         })
 
         const paginas = doc.internal.getNumberOfPages()
@@ -616,12 +603,9 @@ async function relatorioClientes() {
             doc.text(`Pagina ${i} de ${paginas}`, 105, 290, { align: 'center' })
         }
 
-        // Definir o caminho do arquivo temporário
         const tempDir = app.getPath('temp')
-        const filePath = path.join(tempDir, 'clientes.pdf')
-        // Salvar temporariamente o arquivo 
+        const filePath = path.join(tempDir, 'funcionarios.pdf')
         doc.save(filePath)
-        // Abrir o arquivo no aplicativo padrão de leitura de pdf do computador do usuario
         shell.openPath(filePath)
     } catch (error) {
         console.log(error)
@@ -811,6 +795,24 @@ ipcMain.on('delete-client', async (event, id) => {
     }
 })
 
+ipcMain.on('delete-OS',async(event, id)=> {
+    console.log("TESTE")
+    try {
+      const {response } = await dialog.showMessageBox({
+        type: 'warning',
+        title: "Atenção",
+        message: "Deseja realmente excluir esta OS?",
+        buttons: ['Cancelar','Excluir']
+      })
+      if (response === 1){
+        const delos = await osModel.findByIdAndDelete(id)
+        event.reply('reset-form')
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  })
+
 // == Fim do CRUD Delete =============================================================
 
 
@@ -885,13 +887,57 @@ ipcMain.on('search-os', (event) => {
         type: 'input',
         width: 400,
         height: 200
-    }).then((result) => {
+    }).then(async (result) => {
         if (result !== null) {
-            console.log(result)
-            //buscar a os no banco pesquisando pelo valor do result (número da OS)
 
+            //buscar a os no banco pesquisando pelo valor do result (número da OS)
+            if (mongoose.Types.ObjectId.isValid(result)) {
+                try {
+                    const dateOS = await osModel.findById(result)
+                    if (dateOS) {
+                        console.log(dateOS) // teste importante
+                        // enviando os dados da OS ao rendererOS
+                        // OBS: IPC só trabalha com string, então é necessário converter o JSON para string JSON.stringify(dateOS)
+                        event.reply('render-os', JSON.stringify(dateOS))
+                    } else {
+                        dialog.showMessageBox({
+                            type: 'warning',
+                            title: "Aviso!",
+                            message: "OS não encontrada",
+                            buttons: ['OK']
+                        })
+                    }
+                } catch (error) {
+                    console.log(error)
+                }
+            } else {
+                dialog.showMessageBox({
+                    type: 'error',
+                    title: "Atenção!",
+                    message: "Formato do número da OS inválido.\nVerifique e tente novamente.",
+                    buttons: ['OK']
+                })
+            }
         }
     })
+})
+//ipcMain.on('search-os', async(event,nameOS)=>{
+//try {
+//const dateOS  = await osModel.find({nomeClient: new RegExp(name, 'i')})
+//console.log(dataClient)
+//event.reply ('render-client', JSON.stringify(dataClient))
+
+//} catch (error) {
+//console.log(error)  }
+//})
+// buscar cliente para vincular
+ipcMain.on('search-clients', async (event) => {
+    try {
+        const clients = await clientModel.find().sort({ nomeClient: 1 })
+        event.reply('list-clients', JSON.stringify(clients))
+    } catch (error) {
+        console.log(error)
+    }
 })
 
 // == Fim - Buscar OS ====================================================================
@@ -909,7 +955,7 @@ ipcMain.on('search-car', async (event) => {
 
         // Passo 3: envio das placas para o renderizador. OBS: Não esquecer de converter para String
         event.reply('list-veiculos', JSON.stringify(cars))
-        
+
     } catch (error) {
         console.log(error)
     }

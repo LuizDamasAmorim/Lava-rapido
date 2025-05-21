@@ -27,10 +27,12 @@ contextBridge.exposeInMainWorld('api', {
     validateSearch: () => ipcRenderer.send('validate-search'),
     setClient: (args) => ipcRenderer.on('set-client', args),
     deleteClient: (id) => ipcRenderer.send ('delete-client', id),
+    deleteOS: (id) => ipcRenderer.send('delete-OS', id),
     updateClient: (client) => ipcRenderer.send ('update-client', client),
     searchOS: () => ipcRenderer.send('search-os'),
     searchCar: (cars) => ipcRenderer.send('search-car', cars),
-    listVeiculos: (cars) => ipcRenderer.on('list-veiculos', cars)
+    listVeiculos: (cars) => ipcRenderer.on('list-veiculos', cars),
+    renderOS: (dataOS) => ipcRenderer.on('render-os', dataOS)
 })
 
 function dbStatus(message) {

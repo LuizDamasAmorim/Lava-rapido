@@ -12,6 +12,12 @@ const cadastroOS = new Schema({
         type: Date,
         default: Date.now
     },
+    marcaOs: {
+        type: String
+    },
+    modeloOs: {
+        type: String
+    },
     PlacaVeiculoOS: {
         type: String
     },

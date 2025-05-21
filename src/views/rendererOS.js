@@ -20,6 +20,8 @@ let PlacaVeiculoOS = document.getElementById('inputPlacaOS')
 let FuncionarioOS = document.getElementById('inputFuncionarioOS')
 let OsTipo = document.getElementById('inputOsTipo')
 let ValorOS = document.getElementById('inputValorOS')
+let marcaOs = document.getElementById('inputMarcaOS')
+let modeloOs = document.getElementById('inputModeloOS')
 // ============================================================================================
 
 
@@ -31,7 +33,7 @@ frmOS.addEventListener('submit', async (event) => {
     // Evitar o comportamento padrão do submit, que é enviar os dados do formulário e reiniciar o documento html
     event.preventDefault()
     // Teste importante (recebimento dos dados do formulário - passo 1 do fluxo)
-    console.log(PlacaVeiculoOS.value, FuncionarioOS.value, OsTipo.value, ValorOS.value)
+    console.log(PlacaVeiculoOS.value, FuncionarioOS.value, OsTipo.value, ValorOS.value, marcaOs.value, modeloOs.value)
 
     // Criarum objeto para armazenar os dados do cliente antes de enviar ao main 
     const os = {
@@ -39,6 +41,8 @@ frmOS.addEventListener('submit', async (event) => {
         FuncOrderservice: FuncionarioOS.value,
         statusOsTipoLavagem: OsTipo.value,
         valorOrderservice: ValorOS.value,
+        marcaOs: marcaOs.value,
+        modeloOs: modeloOs.value
     }
     // Enviar ao main o objeto client - (Passo 2: fluxo)
     // Uso do preload.js
@@ -58,13 +62,10 @@ const input = document.getElementById('inputSearchOS')
 const suggestionList = document.getElementById('viewListSuggestion')
 
 // capturar os campos que vão ser preenchidos
-let idOS = document.getElementById('IdOS')
+let idOS = document.getElementById('inputReciboOS')
 let dateOS = document.getElementById('inputData')
 let placaCar = document.getElementById('inputPlacaCar')
-let marcaOS = document.getElementById('inputMarcaOS')
-let ModeloOS = document.getElementById('inputModeloOS')
 let PlacaOS = document.getElementById('inputPlacaOS')
-
 
 // vetor usado na manipulação (filtragem) dos dados
 let arrayPlaca = []
@@ -111,8 +112,8 @@ input.addEventListener('input', () => {
             // Adicionar um evento de clique no item da lista para preencher os campos do formulario 
             item.addEventListener('click', () => {
                 //idVeiculo.value = c._id
-                marcaOS.value = c.marcaVeiculo
-                ModeloOS.value = c.modeloVeiculo
+                marcaOs.value = c.marcaVeiculo
+                modeloOs.value = c.modeloVeiculo
                 PlacaOS.value = c.placaVeiculo
 
                 // Limpar o input e recolher a lista 
@@ -145,8 +146,7 @@ function inputOs() {
 api.renderOS((event, dataOS) => {
     console.log(dataOS)
     const os = JSON.parse(dataOS)
-    // preencher os campos com os dados da OS
-    idOS.value = os._id
+    
     // formatar data:
     const data = new Date(os.dataEntrada)
     const formatada = data.toLocaleString("pt-BR", {
@@ -157,11 +157,20 @@ api.renderOS((event, dataOS) => {
         minute: "2-digit",
         second: "2-digit"
     })
-    dataOS.value = formatada
+    // preencher os campos com os dados da OS
+    idOS.value = os._id
+    dateOS.value = formatada
+    marcaOs.value = os.marcaOs
+    modeloOs.value = os.modeloOs
     PlacaVeiculoOS.value = os.PlacaVeiculoOS
-    FuncionarioOS.value = os.FuncOrderservice
-    OsTipo.value = os.statusOsTipoLavagem
-    ValorOS.value = os.valorOrderservice
+    FuncionarioOS.value = os.funResponsavel
+    OsTipo.value = os.TipoDeLavagem
+    ValorOS.value = os.valor
+
+    btnUpdate.disabled = false
+    btnDelete.disabled = false
+
+    btnCreate.disabled = true
 })
 
 // == Fim - Buscar OS =========================================================================
@@ -180,5 +189,17 @@ api.resetForm((args) => {
 })
 
 // == Fim - Reset Form =========================================================
+
+
+
+// Excluir Os ==================================================================
+function excluirOS() {
+    console.log(idOS.value)
+    api.deleteOS(idOS.value)
+}
+// Fim - Excluir Os ============================================================
+
+
+
 
 
