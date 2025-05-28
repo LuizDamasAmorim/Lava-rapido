@@ -545,7 +545,7 @@ ipcMain.on('new-os', async (event, os) => {
 
 async function relatorioLavagem() {
     try {
-        const fun = await osModel.find().sort({ funResponsavel: 1 })
+        const fun = await osModel.find().sort({ PlacaVeiculoOS: 1 })
 
         const doc = new jsPDF('p', 'mm', 'a4')
 
@@ -564,7 +564,7 @@ async function relatorioLavagem() {
         doc.text(`Data: ${dataAtual}`, 160, 10)   //(x = 160) (y = 10)
 
         let y = 45
-        doc.text("Funcionário", 14, y)
+        doc.text("Placa", 14, y)
         doc.text("Tipo", 90, y)
         doc.text("Valor", 130, y)
         y += 5
@@ -580,7 +580,7 @@ async function relatorioLavagem() {
                 doc.addPage()
                 y = 20 // resetar a variável y
 
-                doc.text("Funcionário", 14, y)
+                doc.text("Placa", 14, y)
                 doc.text("Tipo", 90, y)
                 doc.text("Valor", 130, y)
                 y += 5
@@ -589,7 +589,7 @@ async function relatorioLavagem() {
                 y += 10
             }
 
-            doc.text(String(c.funResponsavel), 14, y)
+            doc.text(String(c.PlacaVeiculoOS), 14, y)
             doc.text(String(c.TipoDeLavagem), 90, y)
             doc.text(String(c.valor ?? "N/A"), 130, y)
 
@@ -604,7 +604,7 @@ async function relatorioLavagem() {
         }
 
         const tempDir = app.getPath('temp')
-        const filePath = path.join(tempDir, 'funcionarios.pdf')
+        const filePath = path.join(tempDir, 'lavagens.pdf')
         doc.save(filePath)
         shell.openPath(filePath)
     } catch (error) {
@@ -795,23 +795,23 @@ ipcMain.on('delete-client', async (event, id) => {
     }
 })
 
-ipcMain.on('delete-OS',async(event, id)=> {
+ipcMain.on('delete-OS', async (event, id) => {
     console.log("TESTE")
     try {
-      const {response } = await dialog.showMessageBox({
-        type: 'warning',
-        title: "Atenção",
-        message: "Deseja realmente excluir esta OS?",
-        buttons: ['Cancelar','Excluir']
-      })
-      if (response === 1){
-        const delos = await osModel.findByIdAndDelete(id)
-        event.reply('reset-form')
-      }
+        const { response } = await dialog.showMessageBox({
+            type: 'warning',
+            title: "Atenção",
+            message: "Deseja realmente excluir esta OS?",
+            buttons: ['Cancelar', 'Excluir']
+        })
+        if (response === 1) {
+            const delos = await osModel.findByIdAndDelete(id)
+            event.reply('reset-form')
+        }
     } catch (error) {
-      console.log(error)
+        console.log(error)
     }
-  })
+})
 
 // == Fim do CRUD Delete =============================================================
 
@@ -865,6 +865,44 @@ ipcMain.on('update-client', async (event, client) => {
 
 
 
+// == CRUD Update - OS ===============================================================
+
+ipcMain.on('update-os', async (event, os) => {
+    console.log(os) //teste importante (recebimento dos dados do cliente)
+    try {
+        // Criar uma nova estrutura de dados usando a classe modelo. Atenção! Os atributos precisam ser identicos ao mdelo de dados Clientes.js e os valores são definidos pelo conteúdo do objeto client
+        const updateOS = await osModel.findByIdAndUpdate(
+            os.idOS,
+            {
+                funResponsavel: os.FuncOrderservice,
+                TipoDeLavagem: os.statusOsTipoLavagem,
+                valor: os.valorOrderservice
+            },
+            {
+                new: true
+            }
+        )
+        // Mensagem de confirmação 
+        dialog.showMessageBox({
+            // Customização 
+            type: 'info',
+            title: "Aviso",
+            message: "Dados do cliente alterados com sucesso",
+            buttons: ['OK']
+        }).then((result) => {
+            // Ação ao pressionar o botão (result = 0)
+            if (result.response === 0) {
+                // Enviar um pedido para o renderizador limpar os campos e resetar as configurações pré definidas (rotulo 'reset-form' do preload.js)
+                event.reply('reset-form')
+            }
+        })
+    } catch (error) {
+        console.log(error)
+    }
+})
+
+// == Fim do CRUD Update OS ==========================================================
+
 
 
 
@@ -873,6 +911,8 @@ ipcMain.on('update-client', async (event, client) => {
 // ================================================================================================*
 // == Ordem de Serviço ============================================================================*
 // ================================================================================================*
+
+
 
 // == Buscar OS =========================================================================
 
@@ -962,6 +1002,249 @@ ipcMain.on('search-car', async (event) => {
 })
 
 // == Fim - Buscar Placa =================================================================
+
+
+
+// == Imprimir OS ========================================================================
+
+
+// ipcMain.on('print-os', (event) => {
+//     //console.log("teste: busca OS")
+//     prompt({
+//         title: 'Imprimir OS',
+//         label: 'Digite o número da OS:',
+//         inputAttrs: {
+//             type: 'text'
+//         },
+//         type: 'input',
+//         width: 400,
+//         height: 200
+//     }).then(async (result) => {
+//         if (result !== null) {
+
+//             //buscar a os no banco pesquisando pelo valor do result (número da OS)
+//             if (mongoose.Types.ObjectId.isValid(result)) {
+//                 try {
+//                     // teste importante 
+//                     //console.log("imprimir OS")
+
+//                     const dateOS = await osModel.findById(result)
+//                     if (dateOS) {
+//                         console.log(dateOS) // teste importante
+//                         // enviando os dados da OS ao rendererOS
+//                         // const cars = await veiculoModel.find({PlacaVeiculoOS: dateOS.PlacaVeiculoOS
+//                         // }).sort({ placaVeiculo: 1 })
+//                         // console.log(cars)
+
+//                         // impressão (documento PDF) com os dados da OS dos carros e termos do serviço (uso do jspdf)
+
+//                     } else {
+//                         dialog.showMessageBox({
+//                             type: 'warning',
+//                             title: "Aviso!",
+//                             message: "OS não encontrada",
+//                             buttons: ['OK']
+//                         })
+//                     }
+
+//                 } catch (error) {
+//                     console.log(error)
+//                 }
+//             } else {
+//                 dialog.showMessageBox({
+//                     type: 'error',
+//                     title: "Atenção!",
+//                     message: "Formato do número da OS inválido.\nVerifique e tente novamente.",
+//                     buttons: ['OK']
+//                 })
+//             }
+//         }
+//     })
+// }) 
+
+//ipcMain.on('search-os', async(event,nameOS)=>{
+//try {
+//const dateOS  = await osModel.find({nomeClient: new RegExp(name, 'i')})
+//console.log(dataClient)
+//event.reply ('render-client', JSON.stringify(dataClient))
+
+//} catch (error) {
+//console.log(error)  }
+//})
+// buscar cliente para vincular
+ipcMain.on('search-clients', async (event) => {
+    try {
+        const clients = await clientModel.find().sort({ nomeClient: 1 })
+        event.reply('list-clients', JSON.stringify(clients))
+    } catch (error) {
+        console.log(error)
+    }
+})
+
+// impressão via botão imprimir
+ipcMain.on('print-os', async (event) => {
+    prompt({
+        title: 'Imprimir OS',
+        label: 'Digite o número da OS:',
+        inputAttrs: {
+            type: 'text'
+        },
+        type: 'input',
+        width: 400,
+        height: 200
+    }).then(async (result) => {
+        // buscar OS pelo id (verificar formato usando o mongoose - importar no início do main)
+        if (result !== null) {
+            // Verificar se o ID é válido (uso do mongoose - não esquecer de importar)
+            if (mongoose.Types.ObjectId.isValid(result)) {
+                try {
+                    // teste do botão imprimir
+                    //console.log("imprimir OS")
+                    const dateOS = await osModel.findById(result)
+                    if (dateOS && dateOS !== null) {
+                        console.log(dateOS) // teste importante
+                        // extrair os dados do cliente de acordo com o idCliente vinculado a OS
+                        const dataClient = await veiculoModel.find({
+                            _id: dateOS.idCliente
+                        })
+                        console.log(dataClient)
+                        // impressão (documento PDF) com os dados da OS, do cliente e termos do serviço (uso do jspdf)
+
+                        // formatação do documento pdf
+                        const doc = new jsPDF('p', 'mm', 'a4')
+                        const imagePath = path.join(__dirname, 'src', 'public', 'img', 'logotubarao64x64.png')
+                        const imageBase64 = fs.readFileSync(imagePath, { encoding: 'base64' })
+                        doc.addImage(imageBase64, 'PNG', 5, 8)
+                        doc.setFontSize(18)
+                        doc.text("OS:", 14, 45) //x=14, y=45
+                        doc.setFontSize(12)
+
+                        // Extração dos dados do cliente vinculado a OS
+                        dataClient.forEach((c) => {
+                            doc.text("Cliente:", 14, 65),
+                                doc.text(c.PlacaVeiculoOS, 34, 65),
+                                doc.text(c.modeloOs, 85, 65),
+                                doc.text(c.marcaOs || "N/A", 130, 65)
+                            //...
+                        })
+
+                        // Extração dos dados da OS                        
+                        doc.text(String(dateOS.funResponsavel), 14, 85)
+                        doc.text(String(dateOS.TipoDeLavagem), 80, 85)
+                        doc.text(String(dateOS.valor), 150, 85)
+
+                        // Texto do termo de serviço
+                        doc.setFontSize(10)
+                        const termo = `
+    Termo de Serviço e Garantia
+    
+    O cliente autoriza a realização dos serviços técnicos descritos nesta ordem, ciente de que:
+    
+    - Diagnóstico e orçamento são gratuitos apenas se o serviço for aprovado. Caso contrário, poderá ser cobrada taxa de análise.
+    - Peças substituídas poderão ser retidas para descarte ou devolvidas mediante solicitação no ato do serviço.
+    - A garantia dos serviços prestados é de 90 dias, conforme Art. 26 do Código de Defesa do Consumidor, e cobre exclusivamente o reparo executado ou peça trocada, desde que o equipamento não tenha sido violado por terceiros.
+    - Não nos responsabilizamos por dados armazenados. Recomenda-se o backup prévio.
+    - Equipamentos não retirados em até 90 dias após a conclusão estarão sujeitos a cobrança de armazenagem ou descarte, conforme Art. 1.275 do Código Civil.
+    - O cliente declara estar ciente e de acordo com os termos acima.`
+
+                        // Inserir o termo no PDF
+                        doc.text(termo, 14, 150, { maxWidth: 180 }) // x=14, y=60, largura máxima para quebrar o texto automaticamente
+
+                        // Definir o caminho do arquivo temporário e nome do arquivo
+                        const tempDir = app.getPath('temp')
+                        const filePath = path.join(tempDir, 'os.pdf')
+                        // salvar temporariamente o arquivo
+                        doc.save(filePath)
+                        // abrir o arquivo no aplicativo padrão de leitura de pdf do computador do usuário
+                        shell.openPath(filePath)
+                    } else {
+                        dialog.showMessageBox({
+                            type: 'warning',
+                            title: "Aviso!",
+                            message: "OS não encontrada",
+                            buttons: ['OK']
+                        })
+                    }
+
+                } catch (error) {
+                    console.log(error)
+                }
+            } else {
+                dialog.showMessageBox({
+                    type: 'error',
+                    title: "Atenção!",
+                    message: "Código da OS inválido.\nVerifique e tente novamente.",
+                    buttons: ['OK']
+                })
+            }
+        }
+    })
+})
+
+async function printOS(osId) {
+    try {
+        const dateOS = await osModel.findById(osId)
+
+        const dataClient = await clientModel.find({
+            _id: dateOS.idCliente
+        })
+        console.log(dataClient)
+        // impressão (documento PDF) com os dados da OS, do cliente e termos do serviço (uso do jspdf)
+
+        // formatação do documento pdf
+        const doc = new jsPDF('p', 'mm', 'a4')
+        const imagePath = path.join(__dirname, 'src', 'public', 'img', 'logotubarao64x64.png')
+        const imageBase64 = fs.readFileSync(imagePath, { encoding: 'base64' })
+        doc.addImage(imageBase64, 'PNG', 5, 8)
+        doc.setFontSize(18)
+        doc.text("OS:", 14, 45) //x=14, y=45
+        doc.setFontSize(12)
+
+        // Extração dos dados do cliente vinculado a OS
+        dataClient.forEach((c) => {
+            doc.text("Cliente:", 14, 65),
+                doc.text(c.PlacaVeiculoOS, 34, 65),
+                doc.text(c.modeloOs, 85, 65),
+                doc.text(c.marcaOs || "N/A", 130, 65)
+            //...
+        })
+
+        // Extração dos dados da OS                        
+        doc.text(String(dateOS.funResponsavel), 14, 85)
+        doc.text(String(dateOS.TipoDeLavagem), 40, 85)
+        doc.text(String(dateOS.valor), 80, 85)
+
+        // Texto do termo de serviço
+        doc.setFontSize(10)
+        const termo = `
+Termo de Serviço e Garantia
+
+O cliente autoriza a realização dos serviços técnicos descritos nesta ordem, ciente de que:
+
+- Diagnóstico e orçamento são gratuitos apenas se o serviço for aprovado. Caso contrário, poderá ser cobrada taxa de análise.
+- Peças substituídas poderão ser retidas para descarte ou devolvidas mediante solicitação no ato do serviço.
+- A garantia dos serviços prestados é de 90 dias, conforme Art. 26 do Código de Defesa do Consumidor, e cobre exclusivamente o reparo executado ou peça trocada, desde que o equipamento não tenha sido violado por terceiros.
+- Não nos responsabilizamos por dados armazenados. Recomenda-se o backup prévio.
+- Equipamentos não retirados em até 90 dias após a conclusão estarão sujeitos a cobrança de armazenagem ou descarte, conforme Art. 1.275 do Código Civil.
+- O cliente declara estar ciente e de acordo com os termos acima.`
+
+        // Inserir o termo no PDF
+        doc.text(termo, 14, 150, { maxWidth: 180 }) // x=14, y=60, largura máxima para quebrar o texto automaticamente
+
+        // Definir o caminho do arquivo temporário e nome do arquivo
+        const tempDir = app.getPath('temp')
+        const filePath = path.join(tempDir, 'os.pdf')
+        // salvar temporariamente o arquivo
+        doc.save(filePath)
+        // abrir o arquivo no aplicativo padrão de leitura de pdf do computador do usuário
+        shell.openPath(filePath)
+
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+// == Fim - Imprimir Os ==================================================================
 
 
 

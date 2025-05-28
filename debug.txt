@@ -1,5 +1,2 @@
 OS
-    Fazer o CRUD dos botões
     Fazer a atualização da Os
-
-    Dar funcionalidade ao botão de imprimir recibo

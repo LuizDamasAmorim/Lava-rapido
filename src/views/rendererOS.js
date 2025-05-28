@@ -36,17 +36,33 @@ frmOS.addEventListener('submit', async (event) => {
     console.log(PlacaVeiculoOS.value, FuncionarioOS.value, OsTipo.value, ValorOS.value, marcaOs.value, modeloOs.value)
 
     // Criarum objeto para armazenar os dados do cliente antes de enviar ao main 
-    const os = {
-        PlacaVeiculoOS: PlacaVeiculoOS.value,
-        FuncOrderservice: FuncionarioOS.value,
-        statusOsTipoLavagem: OsTipo.value,
-        valorOrderservice: ValorOS.value,
-        marcaOs: marcaOs.value,
-        modeloOs: modeloOs.value
+
+    if (idOS.value === "") {
+        const os = {
+            PlacaVeiculoOS: PlacaVeiculoOS.value,
+            FuncOrderservice: FuncionarioOS.value,
+            statusOsTipoLavagem: OsTipo.value,
+            valorOrderservice: ValorOS.value,
+            marcaOs: marcaOs.value,
+            modeloOs: modeloOs.value
+        }
+        // Enviar ao main o objeto client - (Passo 2: fluxo)
+        // Uso do preload.js
+        api.newOs(os)
+    } else {
+        const os = {
+            idOS: idOS.value,
+            PlacaVeiculoOS: PlacaVeiculoOS.value,
+            FuncOrderservice: FuncionarioOS.value,
+            statusOsTipoLavagem: OsTipo.value,
+            valorOrderservice: ValorOS.value,
+            marcaOs: marcaOs.value,
+            modeloOs: modeloOs.value
+        }
+
+        api.updateOS(os)
+
     }
-    // Enviar ao main o objeto client - (Passo 2: fluxo)
-    // Uso do preload.js
-    api.newOs(os)
 
 })
 // == Fim CRUD Create/Update ==================================================================
@@ -119,10 +135,10 @@ input.addEventListener('input', () => {
                 // Limpar o input e recolher a lista 
                 input.value = ""
                 suggestionList.value = ""
-            }) 
+            })
         })
     })
-        
+
 })
 
 // Ocultar a lista ao clicar fora
@@ -146,7 +162,7 @@ function inputOs() {
 api.renderOS((event, dataOS) => {
     console.log(dataOS)
     const os = JSON.parse(dataOS)
-    
+
     // formatar data:
     const data = new Date(os.dataEntrada)
     const formatada = data.toLocaleString("pt-BR", {
@@ -199,7 +215,12 @@ function excluirOS() {
 }
 // Fim - Excluir Os ============================================================
 
+// Imprimir Os =================================================================
 
+function generateOS() {
+    api.printOS()
+}
 
+// Fim - Imprimir Os ===========================================================
 
 
