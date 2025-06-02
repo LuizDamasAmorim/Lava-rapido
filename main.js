@@ -24,9 +24,6 @@ const osModel = require("./src/models/os.js")
 //Importação do modelo de dados dos veículos
 const veiculoModel = require("./src/models/cadcarros.js")
 
-//Importação do modelo de dados dos veículos
-const funcionarioModel = require("./src/models/funcionarios.js")
-
 // Importação do pacote jspdf (npm i jspdf)
 const { jspdf, default: jsPDF } = require('jspdf')
 
@@ -86,10 +83,6 @@ const createWindow = () => {
 
     ipcMain.on('cadcarros-window', () => {
         cadcarrosWindow()
-    })
-
-    ipcMain.on('funcionarios-window', () => {
-        funcionariosWindow()
     })
 }
 // Fim - Menu personalizado =========================================================================
@@ -190,28 +183,6 @@ function servicosWindow() {
     servicos.loadFile('./src/views/servicos.html')
     servicos.center() // centralizar servicos
 }
-
-//Janela funcionarios
-let funcionarios
-function funcionariosWindow() {
-    nativeTheme.themeSource = 'light'
-    const main = BrowserWindow.getFocusedWindow()
-    if (main) {
-        funcionarios = new BrowserWindow({
-            width: 1010,
-            height: 640,
-            //autoHideMenuBar: true,
-            parent: main,
-            modal: true,
-            //Ativação do preload.js
-            webPreferences: {
-                preload: path.join(__dirname, 'preload.js')
-            }
-        })
-    }
-    funcionarios.loadFile('./src/views/funcionarios.html')
-    funcionarios.center() // centralizar funcionarios
-}
 // Fim - Janelas ===========================================================================
 
 
@@ -272,10 +243,6 @@ const template = [
             {
                 label: 'Serviços',
                 click: () => servicosWindow()
-            },
-            {
-                label: 'Funcionários',
-                click: () => funcionariosWindow()
             },
             {
                 type: 'separator'
@@ -657,44 +624,6 @@ ipcMain.on('new-veiculo', async (event, veiculo) => {
                 }
             })
         }
-        console.log(error)
-    }
-})
-
-// Fim - Crud OS ===================================================================
-
-
-
-// Crud Funcionários ===============================================================
-
-ipcMain.on('new-funcionario', async (event, funcionario) => {
-    console.log(funcionario)
-
-
-    try {
-        const newFuncionario = new funcionarioModel({
-            nomeFunc: funcionario.nomeF,
-            cpfFunc: funcionario.cpfF,
-            emailFunc: funcionario.emailF,
-            foneFunc: funcionario.foneF,
-            cargoFunc: funcionario.cargoF,
-            horaFunc: funcionario.horaF,
-            salarioFunc: funcionario.salarioF
-        })
-        await newFuncionario.save()
-
-        dialog.showMessageBox({
-            type: 'info',
-            title: "Aviso",
-            message: "Funcionário cadastrado com sucesso",
-            buttons: ['OK']
-        }).then((result) => {
-            if (result.response === 0) {
-                event.reply('reset-form')
-            }
-
-        })
-    } catch (error) {
         console.log(error)
     }
 })
@@ -1116,7 +1045,7 @@ ipcMain.on('print-os', async (event) => {
                         const imageBase64 = fs.readFileSync(imagePath, { encoding: 'base64' })
                         doc.addImage(imageBase64, 'PNG', 5, 8)
                         doc.setFontSize(18)
-                        doc.text("OS:", 14, 45) //x=14, y=45
+                        doc.text("Lavagem:", 14, 45) //x=14, y=45
                         doc.setFontSize(12)
 
                         // Extração dos dados do cliente vinculado a OS
@@ -1129,9 +1058,9 @@ ipcMain.on('print-os', async (event) => {
                         })
 
                         // Extração dos dados da OS                        
-                        doc.text(String(dateOS.funResponsavel), 14, 85)
-                        doc.text(String(dateOS.TipoDeLavagem), 80, 85)
-                        doc.text(String(dateOS.valor), 150, 85)
+                        doc.text(String(dateOS.funResponsavel), 14, 65)
+                        doc.text(String(dateOS.TipoDeLavagem), 80, 65)
+                        doc.text(String(dateOS.valor), 150, 65)
 
                         // Texto do termo de serviço
                         doc.setFontSize(10)
@@ -1148,7 +1077,7 @@ ipcMain.on('print-os', async (event) => {
     - O cliente declara estar ciente e de acordo com os termos acima.`
 
                         // Inserir o termo no PDF
-                        doc.text(termo, 14, 150, { maxWidth: 180 }) // x=14, y=60, largura máxima para quebrar o texto automaticamente
+                        doc.text(termo, 14, 140, { maxWidth: 180 }) // x=14, y=60, largura máxima para quebrar o texto automaticamente
 
                         // Definir o caminho do arquivo temporário e nome do arquivo
                         const tempDir = app.getPath('temp')
@@ -1210,9 +1139,9 @@ async function printOS(osId) {
         })
 
         // Extração dos dados da OS                        
-        doc.text(String(dateOS.funResponsavel), 14, 85)
-        doc.text(String(dateOS.TipoDeLavagem), 40, 85)
-        doc.text(String(dateOS.valor), 80, 85)
+        doc.text(String(dateOS.funResponsavel), 14, 65)
+        doc.text(String(dateOS.TipoDeLavagem), 40, 65)
+        doc.text(String(dateOS.valor), 80, 65)
 
         // Texto do termo de serviço
         doc.setFontSize(10)
@@ -1229,7 +1158,7 @@ O cliente autoriza a realização dos serviços técnicos descritos nesta ordem,
 - O cliente declara estar ciente e de acordo com os termos acima.`
 
         // Inserir o termo no PDF
-        doc.text(termo, 14, 150, { maxWidth: 180 }) // x=14, y=60, largura máxima para quebrar o texto automaticamente
+        doc.text(termo, 14, 140, { maxWidth: 180 }) // x=14, y=60, largura máxima para quebrar o texto automaticamente
 
         // Definir o caminho do arquivo temporário e nome do arquivo
         const tempDir = app.getPath('temp')
