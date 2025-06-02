@@ -1,12 +1,5 @@
-/**
- * Modelo de dados para construção das coleções("tabelas")
- * Ordem de serviço 
- */
-
-//Importação dos recursos do framework mongoose
 const {model, Schema} = require('mongoose')
 
-//Criação da estrutura da coleção OS
 const cadastroOS = new Schema({
     dataEntrada: {
         type: Date,
@@ -30,9 +23,6 @@ const cadastroOS = new Schema({
     valor: {
         type: String
     }
-}, {versionKey: false}) //Não versionar os dados armazenadas
-
-//Exportar para o main o modelo de dados
-//OS será o nome da coleção
+}, {versionKey: false}) 
 
 module.exports = model('OS', cadastroOS)

@@ -1,5 +1,3 @@
-// Data atualizada no rodapé
-
 function obterData() {
     const dataAtual = new Date ()
     const options = {
@@ -12,5 +10,4 @@ function obterData() {
     return dataAtual.toLocaleDateString('pt-BR', options)
 }
 
-// Executar a função ao iniciar o aplicativo
 document.getElementById('dataAtual').innerHTML = obterData()

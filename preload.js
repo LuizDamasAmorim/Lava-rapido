@@ -1,15 +1,7 @@
-/**
- * Arquivo de pré carregamento e reforço de segurança na comunicação entre processos (IPC)
- */
-
-// Importação de recursos do framework electron
-// contextBridge (segurança) ipcRenderer (comunicação)
 const {contextBridge, ipcRenderer} = require('electron')
 
-// enviar ao main um pedido para conexão com o banco de dados e troca do icone no processo de renderização (index.html - renderer.html)
 ipcRenderer.send('db-connect')
 
-// Expor (autorizar a comunicação entre processos)
 
 contextBridge.exposeInMainWorld('api', {
     cadclientesWindow: () => ipcRenderer.send('cadclientes-window'),
