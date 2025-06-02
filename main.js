@@ -222,17 +222,6 @@ const template = [
             {
                 label: 'Restautar o zoom padrão',
                 role: 'resetZoom'
-            },
-            {
-                type: 'separator'
-            },
-            {
-                label: 'Recarregar',
-                role: 'reload'
-            },
-            {
-                label: 'Ferramentas do desenvolvedor',
-                role: 'toggleDevTools'
             }
         ]
     },
